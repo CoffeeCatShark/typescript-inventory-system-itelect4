@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import ItemCard from './components/ItemCard'
 import ManagerCard from './components/ManagerCard'
 import SupplierCard from './components/SupplierCard'
@@ -146,13 +147,23 @@ console.log(inventory_size)
 console.log(suppliers_size)
 
 function App() {
+const [items, setItems] = useState<Item[]>(itemsbox);
 
+const handleClose = (item: Item) => {
+    setItems(prev => prev.filter(i => i.id !== item.id));
+};
   return (
     <>
     <ManagerCard manager={_manager} />
     
-    <ItemCard item={itemsbox[0]} />
-    <ItemCard item={itemsbox[1]} />
+    {items.map(item => (
+            <ItemCard
+                key={item.id}
+                item={item}
+                onSelect={handleClose}
+            />
+        ))}
+
 
 
     <SupplierCard supplier={suppliers[0]} />
