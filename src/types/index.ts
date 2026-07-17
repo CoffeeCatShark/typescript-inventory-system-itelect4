@@ -21,15 +21,15 @@ Need: Cart(Customer) - Storage(Manager) - DeliveryBox(Supplier)
  *--------------------------------------------------------------ENUMS------------------------------------------------------------*
  */
 export enum AuthorizationLvl {
-    High,
-    Low,
-    Pending
+    High = "High",
+    Low = "Low",
+    Pending = "Pending"
 }
 
 export enum SupplierType {
-    Appliances,
-    Furnitures,
-    Tools
+    Appliances = "Appliances",
+    Furnitures = "Furnitures",
+    Tools = "Tools"
 }
 
 /**
@@ -182,7 +182,7 @@ return items.find((item) => item.id === id);
      */
     let deliverybox: DeliveryBox = addDeliveryBox(supplier,supplierItems)
     
-    let manager: Manager = addManager("Juan", 0)
+    let manager: Manager = addManager("Juan", AuthorizationLvl.High)
 
     //FOR TESTING 
     supplierItems = addSupplierItems(globalID,"TEST1",supplier,12334,_itemType,500)
