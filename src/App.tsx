@@ -146,13 +146,14 @@ console.log(inventory_size)
 console.log(suppliers_size)
 
 function App() {
-  let globalID: number = 0
 
   return (
     <>
     <ManagerCard manager={_manager} />
-
+    
     <ItemCard item={itemsbox[0]} />
+    <ItemCard item={itemsbox[1]} />
+
 
     <SupplierCard supplier={suppliers[0]} />
 
