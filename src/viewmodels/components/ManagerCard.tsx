@@ -1,4 +1,4 @@
-import type { Manager } from "../types/index"
+import type { Manager } from "../../types/index"
 
 interface ManagerCardProps {
     manager: Manager

@@ -1,4 +1,4 @@
-import type { Supplier } from "../types/index"
+import type { Supplier } from "../../types/index"
 
 interface SupplierCardProps {
     supplier: Supplier

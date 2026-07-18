@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import ItemCard from './components/ItemCard'
-import ManagerCard from './components/ManagerCard'
-import SupplierCard from './components/SupplierCard'
+import ItemCard from './viewmodels/components/ItemCard'
+import ManagerCard from './viewmodels/components/ManagerCard'
+import SupplierCard from './viewmodels/components/SupplierCard'
 
 import { Manager, Supplier, AuthorizationLvl, SupplierType, DeliveryBox, Storage, Item, ItemShort} from './types'
 
@@ -133,7 +133,7 @@ return items.find((item) => item.id === id);
     let test: Item | undefined = getById<Item>(storageList,2)
     let shortTest: ItemShort | undefined = getById<ItemShort>(shortItems,0)
 
-
+    
 
 //--------------------------------------------------------------------------------
 //

@@ -1,4 +1,4 @@
-import type { Item } from "../types/index"
+import type { Item } from "../../types/index"
 
 interface ItemCardProps {
     item: Item
