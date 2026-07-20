@@ -1,4 +1,4 @@
-import type { Item } from "../../types/index"
+import type { Item } from "../../types/types"
 
 interface ItemCardProps {
     item: Item
@@ -6,7 +6,6 @@ interface ItemCardProps {
 }
 
 function ItemCard({onSelect, item}: ItemCardProps) {
-
     const handleClick = (): void => {
     onSelect(item);
 };
@@ -15,9 +14,6 @@ function ItemCard({onSelect, item}: ItemCardProps) {
     return (
         <div className="item-card">
             <h3>{item.itemName}</h3>
-            <h3>{item.supplier.supplier_name}</h3>
-            <h3>{item.itemType}</h3>
-            <h3>{item.supplierPrice} Pesos</h3>
             <button onClick={handleClick}>Close</button>
         </div>
     )
