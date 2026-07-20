@@ -57,3 +57,15 @@ function getById<T extends { id: number }>(
 ): T | undefined {
     return array.find(i => i.id === id);
 }
+
+//**================================================== GUIDE
+// Type = Type.(Manager, Supplier, etc.) 
+// Key = Identifier(supplierID, managerID, etc.)
+// Value = Key Value(ID = 5. value is 5.)
+//
+// add<T>(Type, value = key);
+// getById<T>(Type, key, value = key);
+// update<T>(Type, key, value = type);
+// remove<T>(Type, key, value = key);
+
+//  */
