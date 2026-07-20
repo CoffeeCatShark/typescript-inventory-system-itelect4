@@ -34,7 +34,7 @@ const handleSelectSupplier = (selectedSupplier: Supplier): void => {
 }
 
   return (
-      <>
+<>
     {itemList.map(item => (
         <ItemCard
             key={item.itemID}
@@ -59,7 +59,7 @@ const handleSelectSupplier = (selectedSupplier: Supplier): void => {
         />
     ))}
 
-    </>
+</>
   )
 }
 
