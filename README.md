@@ -25,7 +25,10 @@ IMPORTANT! INSTALL TO RUN: REACT ROUTER DOM
 ================
 - Initial storage data is in ../data/database.ts
   > App.tsx will read the initial data from this file and make a copy via useState
+  
   > No actual back end, sadly
+
+  > This means that the data WILL NOT PERSIST after restarting browser.
 
 - For temporary demonstration purposes on showing suppliers,
  items, and manager list(and their requirements): 

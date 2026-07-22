@@ -3,6 +3,7 @@ import type { Item } from "../types/types";
 import { SupplierType } from "../types/types";
 import { add } from "../data/helpers";
 import { globalID, incrementID } from "../data/database"
+import { Link } from "react-router-dom";
 interface AddItemPageProps {
     itemList: Item[];
     setItemList: React.Dispatch<React.SetStateAction<Item[]>>;
@@ -17,6 +18,8 @@ function AddItemPage({
     const [itemPrice, setItemPrice] = useState(0);
     const [itemQuantity, setItemQuantity] = useState(0);
     const [itemType, setItemType] = useState(SupplierType.Appliances);
+    //ADD ONE FOR SUPPLIER ID
+
 
     function AddNewItem() {
         const newItem: Item = {
@@ -75,6 +78,8 @@ function AddItemPage({
             <button onClick={AddNewItem}>
                 Add Item
             </button>
+        
+        <Link to="/items">Back</Link>
         </>
     );
 }

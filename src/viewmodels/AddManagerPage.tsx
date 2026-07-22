@@ -3,13 +3,14 @@ import type { Manager } from "../types/types"
 import { add } from "../data/helpers"
 import { globalID, incrementID } from "../data/database"
 import { AuthorizationLvl } from "../types/types"
+import { Link } from "react-router-dom";
 
 interface AddManagerPageProps {
     managerList: Manager[];
     setManagerList: React.Dispatch<React.SetStateAction<Manager[]>>;
 }
 
-function AddManagerPage({
+export function AddManagerPage({
     managerList,
     setManagerList,
 }: AddManagerPageProps) {
@@ -23,7 +24,7 @@ function AddManagerPage({
             managerName,
             authLevel
         }
-        incrementID
+        incrementID()
         add(managerList, newManager)
         setManagerList([...managerList])
 
@@ -31,6 +32,7 @@ function AddManagerPage({
 
         setManagerName("")
         setAuthLevel(AuthorizationLvl.Pending)
+        console.log(managerList)
     }
 
     return (<>
@@ -49,6 +51,12 @@ function AddManagerPage({
                      <option value={AuthorizationLvl.Low}>Low</option>
                      <option value={AuthorizationLvl.Pending}>Pending</option>
                  </select>
+    <button onClick={AddNewManager}>
+                Add Manager
+            </button>
 
+    <Link to="/managers">
+    Back to Manager List
+    </Link>
     </>)
-}
+}export default AddManagerPage

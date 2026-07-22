@@ -1,26 +1,34 @@
 import { useState } from "react";
 import { Supplier } from "../types/types";
-import { suppliers } from "../data/database";
+import { remove } from "../data/helpers";
 import SupplierCard from "./components/SupplierCard";
+import { Link } from "react-router-dom";
 
-
-
-export function SuppliersPage() {
-    const handleSelectSupplier = (selectedSupplier: Supplier): void => {
-    setSupplierList(prev =>
-        prev.filter(supplier => supplier.supplierId !== selectedSupplier.supplierId)
-    )
+interface SuppliersPageProps{
+    suppliersList:Supplier[]
+    setSuppliersList: React.Dispatch<React.SetStateAction<Supplier[]>>;
 }
-    const [supplierList, setSupplierList] = useState(suppliers);
+
+export function SuppliersPage({suppliersList,setSuppliersList}:SuppliersPageProps) {
+     const handleSelectSupplier = (selectedSupplier: Supplier): void => {
+                remove(suppliersList, "supplierId", selectedSupplier.supplierId);
+            setSuppliersList([...suppliersList])
+        }
+
+
     return (
         <>
-            {supplierList.map(supplier => (
+            {suppliersList.map(supplier => (
                 <SupplierCard
                     key={supplier.supplierId}
                     supplier={supplier}
                     onSelect={handleSelectSupplier}
                 />
             ))}
+
+        <Link to="/suppliers/new">
+        Add New Suppliers
+        </Link>
         </>
     );
 } export default SuppliersPage

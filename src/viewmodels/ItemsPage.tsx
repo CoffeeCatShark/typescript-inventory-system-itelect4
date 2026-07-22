@@ -1,25 +1,35 @@
 import ItemCard from "./components/ItemCard";
-import { useState } from "react";
-import { items } from "../data/database";
 import { Item } from "../types/types";
+import { remove } from "../data/helpers";
+import { Link } from "react-router-dom";
+interface ItemsPageProps{
+    itemsList:Item[]
+    setItemsList: React.Dispatch<React.SetStateAction<Item[]>>;
+}
 
-export function ItemsPage() {
+
+export function ItemsPage({itemsList,setItemsList}:ItemsPageProps) {
     const handleSelectItem = (selectedItem: Item): void => {
-        setItemList(prev =>
-            prev.filter(item => item.itemID !== selectedItem.itemID)
-        );
-    };    
-    const [itemList, setItemList] = useState(items);
+                remove(itemsList, "itemID", selectedItem.itemID);
+
+    
+            
+            setItemsList([...itemsList])
+        }
 
     return (
         <>
-            {itemList.map(item => (
+            {itemsList.map(item => (
                 <ItemCard
                     key={item.itemID}
                     item={item}
                     onSelect={handleSelectItem}
                 />
             ))}
+
+            <Link to="/items/new">
+                Add new Items
+            </Link>
         </>
     );
 } export default ItemsPage

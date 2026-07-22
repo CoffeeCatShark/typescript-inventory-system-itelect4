@@ -6,6 +6,7 @@ import { ManagersPage } from './viewmodels/ManagersPage';
 import { SuppliersPage } from './viewmodels/SuppliersPage';
 import AddItemPage from './viewmodels/AddItemPage';
 import AddManagerPage from './viewmodels/AddManagerPage'
+import AddSupplierPage from './viewmodels/AddSupplierPage';
 
 function App() {
 
@@ -21,19 +22,27 @@ const [mainStorageList, setMainStorageList] = useState(mainStorage);
     
     <BrowserRouter>
         <Routes>
-            <Route path='/' element={<ItemsPage/>}/>
-            <Route path='items' element={<ItemsPage/>}/>
-            <Route path='managers' element={<ManagersPage/>}/>
-            <Route path='suppliers' element={<SuppliersPage/>}/>
+            <Route path='/' element={<ItemsPage
+                itemsList={itemList}
+                setItemsList={setItemList}/>}/>
+
+            <Route path='items' element={<ItemsPage
+                itemsList={itemList}
+                setItemsList={setItemList}/>}/>
+
+            <Route path='managers' element={<ManagersPage
+                managersList={managerList}
+                setManagersList={setManagerList}/>}/>
+
+            <Route path='suppliers' element={<SuppliersPage
+                suppliersList={supplierList}
+                setSuppliersList={setSupplierList}/>}/>
+
             <Route
-                path="/items/new"
-                    element={
-                    <AddItemPage
+                path="/items/new" element={<AddItemPage
                         itemList={itemList}
                         setItemList={setItemList}
-                    />  
-                            }
-            />
+                    />}/>
 
             <Route  
                 path="/managers/new"
@@ -45,7 +54,16 @@ const [mainStorageList, setMainStorageList] = useState(mainStorage);
                     }
             />
 
+            <Route
+                path="/suppliers/new"
+                    element={
+                    <AddSupplierPage
+                        supplierList={supplierList}
+                        setSupplierList={setSupplierList}
+                        />
+                    }
             
+            />
 
 
         </Routes>

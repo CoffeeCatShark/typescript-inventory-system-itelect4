@@ -13,8 +13,8 @@ function ManagerCard({onSelect, manager}: ManagerCardProps) {
 
     return (
         <div className="manager-card">
-            <h3>{manager.name}</h3>
-            <button onClick={handleClick}>Close</button>
+            <h3>{manager.managerName}</h3>
+            <button onClick={handleClick}>Delete</button>
         </div>
     )
 };

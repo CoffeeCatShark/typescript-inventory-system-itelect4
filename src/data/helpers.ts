@@ -23,7 +23,7 @@ export function add<T>(items: T[], value:T ): void {
     items.push(value)
 }
 
-function remove<T, K extends keyof T>(
+export function remove<T, K extends keyof T>(
     array: T[],
     key: K,
     value: T[K]
@@ -36,7 +36,7 @@ function remove<T, K extends keyof T>(
 }
 
 
-function update<T, K extends keyof T>(
+export function update<T, K extends keyof T>(
     array: T[],
     key: K,
     value: T
@@ -51,7 +51,7 @@ function update<T, K extends keyof T>(
     return true;
 }
 
-function getById<T extends { id: number }>(
+export function getById<T extends { id: number }>(
     array: T[],
     id: number
 ): T | undefined {
