@@ -1,10 +1,13 @@
 # React + TypeScript + Vite
 
 ================
+
 IMPORTANT! INSTALL TO RUN: REACT ROUTER DOM
   > npm install react-router-dom
+
 ================
   > npm run dev; "o" + enter
+
 ================
 
                        < ---WORK IN PROGRESS.--- >
