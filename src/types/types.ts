@@ -22,7 +22,7 @@ export enum SupplierType {
  */
 export interface Manager{
     managerID: number,
-    name: String,
+    managerName: String,
     authLevel: AuthorizationLvl
 }
 

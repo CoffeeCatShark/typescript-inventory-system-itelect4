@@ -5,7 +5,7 @@ import { ItemsPage } from './viewmodels/ItemsPage';
 import { ManagersPage } from './viewmodels/ManagersPage';
 import { SuppliersPage } from './viewmodels/SuppliersPage';
 import AddItemPage from './viewmodels/AddItemPage';
-
+import AddManagerPage from './viewmodels/AddManagerPage'
 
 function App() {
 
@@ -14,7 +14,7 @@ const [supplierList, setSupplierList] = useState(suppliers);
 const [itemList, setItemList] = useState(items);
 const [deliveryBoxesList, setDeliveryBoxesList] = useState(deliveryBoxes);
 const [mainStorageList, setMainStorageList] = useState(mainStorage);
-
+                //data stuff
 
   return (
 <>
@@ -29,11 +29,25 @@ const [mainStorageList, setMainStorageList] = useState(mainStorage);
                 path="/items/new"
                     element={
                     <AddItemPage
-            itemList={itemList}
-            setItemList={setItemList}
-        />
-    }
-/>
+                        itemList={itemList}
+                        setItemList={setItemList}
+                    />  
+                            }
+            />
+
+            <Route  
+                path="/managers/new"
+                    element={
+                    <AddManagerPage
+                        managerList={managerList}
+                        setManagerList={setManagerList}
+                        />
+                    }
+            />
+
+            
+
+
         </Routes>
     </BrowserRouter>
 

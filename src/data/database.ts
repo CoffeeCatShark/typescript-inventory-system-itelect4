@@ -14,19 +14,19 @@ export var managers: Manager[] = [
     {
         managerID: 0,
         authLevel: AuthorizationLvl.High,
-        name:"Christian Custodio"
+        managerName:"Christian Custodio"
     }
 ,
     {
         managerID: 1,
         authLevel: AuthorizationLvl.Low,
-        name:"Itchan Custodio"
+        managerName:"Itchan Custodio"
     }
 ,
     {
         managerID: 2,
         authLevel: AuthorizationLvl.Pending,
-        name:"Tano"
+        managerName:"Tano"
     }
 
 ]
