@@ -64,4 +64,13 @@ export type Item =
     export var suppliers: Supplier[] = []
     export var deliveryBoxes: DeliveryBox[] = []
     export var items: Item[] = []
+
+
+    export var globalID = 10
+
+    export function incrementID() {
+    globalID++
+    }export default incrementID
+
+
 //----------------------------------------------------------------------------------------------------------------------------------------
