@@ -4,8 +4,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ItemsPage } from './viewmodels/ItemsPage';
 import { ManagersPage } from './viewmodels/ManagersPage';
 import { SuppliersPage } from './viewmodels/SuppliersPage';
-import { globalID } from './types/types';
-import incrementID from './types/types';
 import AddItemPage from './viewmodels/AddItemPage';
 
 

@@ -2,6 +2,13 @@ import { Manager, Supplier, DeliveryBox, Item, SupplierType, AuthorizationLvl, S
 
 
 
+    export var globalID = 10
+
+    export function incrementID() {
+    globalID++
+    }export default incrementID
+
+
 
 export var managers: Manager[] = [
     {

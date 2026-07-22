@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { Item } from "../types/types";
-import { SupplierType, globalID, incrementID } from "../types/types";
+import { SupplierType } from "../types/types";
 import { add } from "../data/helpers";
-
+import { globalID, incrementID } from "../data/database"
 interface AddItemPageProps {
     itemList: Item[];
     setItemList: React.Dispatch<React.SetStateAction<Item[]>>;
