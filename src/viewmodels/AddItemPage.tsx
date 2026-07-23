@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Item } from "../types/types";
+import type { Item, Supplier } from "../types/types";
 import { SupplierType } from "../types/types";
 import { add } from "../data/helpers";
 import { globalID, incrementID } from "../data/database"
@@ -7,18 +7,20 @@ import { Link } from "react-router-dom";
 interface AddItemPageProps {
     itemList: Item[];
     setItemList: React.Dispatch<React.SetStateAction<Item[]>>;
+    supplierList: Supplier[]
 }
 
 function AddItemPage({
     itemList,
     setItemList,
+    supplierList
 }: AddItemPageProps) {
 
     const [itemName, setItemName] = useState("");
     const [itemPrice, setItemPrice] = useState(0);
     const [itemQuantity, setItemQuantity] = useState(0);
     const [itemType, setItemType] = useState(SupplierType.Appliances);
-    //ADD ONE FOR SUPPLIER ID
+    const [supplierID, setSupplierID] = useState(supplierList[0]?.supplierId ?? 0);
 
 
     function AddNewItem() {
@@ -26,7 +28,7 @@ function AddItemPage({
             itemID: globalID,
             itemName,
             itemType,
-            supplierID: 0, // REPLACE 
+            supplierID,
             supplierPrice: itemPrice,
             deliveredQuantity: itemQuantity,
         };
@@ -42,6 +44,7 @@ function AddItemPage({
         setItemPrice(0);
         setItemQuantity(0);
         setItemType(SupplierType.Appliances);
+        setSupplierID(0)
     }
 
     return (
@@ -59,12 +62,28 @@ function AddItemPage({
                 onChange={(e) => setItemPrice(Number(e.target.value))}
             />
 
+            
             <input
                 type="number"
                 placeholder="Quantity"
                 value={itemQuantity}
                 onChange={(e) => setItemQuantity(Number(e.target.value))}
             />
+
+            <select
+                value={supplierID}
+                onChange={(e) => setSupplierID(Number(e.target.value))}
+            >
+                {supplierList.map(supplier => (
+                    <option
+                        key={supplier.supplierId}
+                        value={supplier.supplierId}
+                    >
+                            
+                        {supplier.supplier_name}
+                    </option>
+                ))}
+            </select>
 
             <select
                 value={itemType}

@@ -7,6 +7,7 @@ import { SuppliersPage } from './viewmodels/SuppliersPage';
 import AddItemPage from './viewmodels/AddItemPage';
 import AddManagerPage from './viewmodels/AddManagerPage'
 import AddSupplierPage from './viewmodels/AddSupplierPage';
+import NavigationBar from './viewmodels/components/NavigationBar';
 
 function App() {
 
@@ -17,18 +18,27 @@ const [deliveryBoxesList, setDeliveryBoxesList] = useState(deliveryBoxes);
 const [mainStorageList, setMainStorageList] = useState(mainStorage);
                 //data stuff
 
+var accessCtrl: number = 0;
+
   return (
 <>
     
+
+    
     <BrowserRouter>
+            <NavigationBar accessCtrl={0} />
+
         <Routes>
             <Route path='/' element={<ItemsPage
                 itemsList={itemList}
-                setItemsList={setItemList}/>}/>
+                setItemsList={setItemList}
+                suppliersList={supplierList}/>}/>
 
             <Route path='items' element={<ItemsPage
                 itemsList={itemList}
-                setItemsList={setItemList}/>}/>
+                setItemsList={setItemList}
+                suppliersList={supplierList}/>}
+                />
 
             <Route path='managers' element={<ManagersPage
                 managersList={managerList}
@@ -42,6 +52,7 @@ const [mainStorageList, setMainStorageList] = useState(mainStorage);
                 path="/items/new" element={<AddItemPage
                         itemList={itemList}
                         setItemList={setItemList}
+                        supplierList={supplierList}
                     />}/>
 
             <Route  
@@ -60,6 +71,8 @@ const [mainStorageList, setMainStorageList] = useState(mainStorage);
                     <AddSupplierPage
                         supplierList={supplierList}
                         setSupplierList={setSupplierList}
+                        deliveryBoxesList={deliveryBoxesList}
+                        setDeliveryBoxesList={setDeliveryBoxesList}
                         />
                     }
             

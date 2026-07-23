@@ -51,11 +51,12 @@ export function update<T, K extends keyof T>(
     return true;
 }
 
-export function getById<T extends { id: number }>(
+export function getById<T, K extends keyof T>(
     array: T[],
-    id: number
+    key: K,
+    value: T[K]
 ): T | undefined {
-    return array.find(i => i.id === id);
+    return array.find(item => item[key] === value);
 }
 
 //**================================================== GUIDE

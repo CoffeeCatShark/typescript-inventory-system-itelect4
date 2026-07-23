@@ -1,41 +1,51 @@
 import { useState } from "react";
 import type { Supplier } from '../types/types';
-import { globalID, incrementID } from "../data/database";
-import { SupplierType} from '../types/types';
+import { globalID, incrementID, deliveryBoxes } from '../data/database';
+import { SupplierType, DeliveryBox } from '../types/types';
 import { add } from "../data/helpers";
 import { Link } from "react-router-dom";
 interface AddSupplierPageProps {
     supplierList: Supplier[];
     setSupplierList: React.Dispatch<React.SetStateAction<Supplier[]>>;
+    deliveryBoxesList: DeliveryBox[];
+    setDeliveryBoxesList: React.Dispatch<React.SetStateAction<DeliveryBox[]>>;
 }
 
 export function AddSupplierPage({
     supplierList,
     setSupplierList,
+    deliveryBoxesList,
+    setDeliveryBoxesList
 }: AddSupplierPageProps) {
     const [supplierName, setSupplierName] = useState("")
     const [supplierType, setSupplierType] = useState(SupplierType.Tools)
-    //ADD DELIVERY BOX ID
+    //GENERATE SUPPLIERBOX ID
 
 
     function AddNewSupplier(){
-        
+        var _globalID: number = globalID + 10
+
         const newSupplier:Supplier = {
             supplierId:globalID,
             supplier_name:supplierName,
             type:supplierType,
-            deliveryBoxID:0     //CHANGE 
+            deliveryBoxID:_globalID
         }
-
-
+        const newDeliveryBoxInstance: DeliveryBox = {
+            deliveryBoxID:_globalID,
+            ownerID:globalID,
+        }
         incrementID()
         add(supplierList, newSupplier)
+        add(deliveryBoxesList, newDeliveryBoxInstance)
         setSupplierList([...supplierList])
-
+        setDeliveryBoxesList([...deliveryBoxesList])
         //for clearing entry 
 
         setSupplierName("")
         setSupplierType(SupplierType.Tools)
+        console.log(deliveryBoxesList)
+        console.log(supplierList)
     }
 
     return (<>

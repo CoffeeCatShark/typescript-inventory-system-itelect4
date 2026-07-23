@@ -34,7 +34,7 @@ export var managers: Manager[] = [
 export var suppliers: Supplier[] = [
     {
         supplierId: 3,
-        supplier_name: "Apple",
+        supplier_name: "MANUAL INVALID SUPPLIER",
         type: SupplierType.Tools,
         deliveryBoxID: 4,
     }
@@ -54,7 +54,7 @@ export var deliveryBoxes: DeliveryBox[] = [
 export var items: Item[] = [
     {
     itemID: 5,
-    itemName: "Iphone",
+    itemName: "MANUAL INVALID ITEM",
     supplierID: 3,
     supplierPrice: 450.00,
     itemType: SupplierType.Tools,

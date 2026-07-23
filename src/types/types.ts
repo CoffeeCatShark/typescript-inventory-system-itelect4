@@ -40,7 +40,7 @@ export interface Supplier{
 export type DeliveryBox = {
     deliveryBoxID: number,
     ownerID: number
-    itemsID: number[]
+    itemsID?: number[]
 }
 
 
