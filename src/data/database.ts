@@ -62,11 +62,10 @@ export var items: Item[] = [
     }
 ]
 
-export var mainStorage: Storage[] = [
+export var mainStorage: Storage = 
     {
         itemID:[5]
     }
-]
 
 //**================================================== GUIDE
 // Type = Type.(Manager, Supplier, etc.) 

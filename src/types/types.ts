@@ -40,7 +40,7 @@ export interface Supplier{
 export type DeliveryBox = {
     deliveryBoxID: number,
     ownerID: number
-    itemsID?: number[]
+    itemsID: number[]
 }
 
 
@@ -58,13 +58,6 @@ export type Item =
     itemType: SupplierType,
     deliveredQuantity: number
 }
-
-
-    export var globalID = 10
-
-    export function incrementID() {
-    globalID++
-    }export default incrementID
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------

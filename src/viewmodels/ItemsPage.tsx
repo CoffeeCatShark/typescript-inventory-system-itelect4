@@ -1,37 +1,47 @@
-import ItemCard from "./components/ItemCard";
-import { Item, Supplier } from "../types/types";
-import { remove } from "../data/helpers";
 import { Link } from "react-router-dom";
-interface ItemsPageProps{
-    itemsList:Item[]
+import type { Item, Supplier } from "../types/types";
+import ItemCard from "./components/ItemCard";
+import { remove } from "../data/helpers";
+
+interface ItemsPageProps {
+    itemsList: Item[];
     setItemsList: React.Dispatch<React.SetStateAction<Item[]>>;
     suppliersList: Supplier[];
 }
 
+export default function ItemsPage({
+    itemsList,
+    setItemsList,
+    suppliersList,
+}: ItemsPageProps) {
 
-export function ItemsPage({itemsList,setItemsList,suppliersList}:ItemsPageProps) {
-    const handleSelectItem = (selectedItem: Item): void => {
-                remove(itemsList, "itemID", selectedItem.itemID);
-
-    
-            
-            setItemsList([...itemsList])
-        }
+    function handleDeleteItem(selectedItem: Item): void {
+        remove(itemsList, "itemID", selectedItem.itemID);
+        setItemsList([...itemsList]);
+    }
 
     return (
         <>
-            {itemsList.map(item => (
-                <ItemCard
-                    key={item.itemID}
-                    item={item}
-                    onSelect={handleSelectItem}
-                    supplierList={suppliersList}
-                />
-            ))}
+            <h1>Items</h1>
 
             <Link to="/items/new">
-                Add new Items
+                Add New Item
             </Link>
+
+            <hr />
+
+            {itemsList.length === 0 ? (
+                <p>No items found.</p>
+            ) : (
+                itemsList.map(item => (
+                    <ItemCard
+                        key={item.itemID}
+                        item={item}
+                        supplierList={suppliersList}
+                        onSelect={handleDeleteItem}
+                    />
+                ))
+            )}
         </>
     );
-} export default ItemsPage
+}

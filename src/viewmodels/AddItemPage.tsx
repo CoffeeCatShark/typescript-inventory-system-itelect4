@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { Item, Supplier } from "../types/types";
 import { SupplierType } from "../types/types";
 import { add } from "../data/helpers";
@@ -15,12 +15,22 @@ function AddItemPage({
     setItemList,
     supplierList
 }: AddItemPageProps) {
-
+    
     const [itemName, setItemName] = useState("");
     const [itemPrice, setItemPrice] = useState(0);
     const [itemQuantity, setItemQuantity] = useState(0);
     const [itemType, setItemType] = useState(SupplierType.Appliances);
     const [supplierID, setSupplierID] = useState(supplierList[0]?.supplierId ?? 0);
+    const itemNameRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        itemNameRef.current?.focus();
+    }, []);
+
+    const handleTypeChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+    ): void => {
+    setItemType(e.target.value as SupplierType);
+    };
 
 
     function AddNewItem() {
@@ -50,7 +60,7 @@ function AddItemPage({
     return (
         <>
             <input
-                placeholder="Item Name"
+                ref={itemNameRef}
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
             />
@@ -87,18 +97,19 @@ function AddItemPage({
 
             <select
                 value={itemType}
-                onChange={(e) => setItemType(e.target.value as SupplierType)}
+                onChange={handleTypeChange}
             >
                 <option value={SupplierType.Appliances}>Appliances</option>
                 <option value={SupplierType.Tools}>Tools</option>
                 <option value={SupplierType.Furnitures}>Furnitures</option>
             </select>
-
+                
             <button onClick={AddNewItem}>
                 Add Item
+                
             </button>
         
-        <Link to="/items">Back</Link>
+        <Link to="/inventory">Back to Inventory</Link>
         </>
     );
 }

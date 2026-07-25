@@ -1,4 +1,8 @@
-# React + TypeScript + Vite
+> useState and useEffect on App.tsx
+
+> useRef, onChangeEvent, Custom Hook on AddItems
+
+> Custom Hook only on add items due to redundant helper function (helpers.ts)
 
 ================
 

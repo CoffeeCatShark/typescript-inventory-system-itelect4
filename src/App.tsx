@@ -1,21 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { managers, suppliers, items, deliveryBoxes, mainStorage} from "../src/data/database"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ItemsPage } from './viewmodels/ItemsPage';
 import { ManagersPage } from './viewmodels/ManagersPage';
 import { SuppliersPage } from './viewmodels/SuppliersPage';
 import AddItemPage from './viewmodels/AddItemPage';
 import AddManagerPage from './viewmodels/AddManagerPage'
 import AddSupplierPage from './viewmodels/AddSupplierPage';
 import NavigationBar from './viewmodels/components/NavigationBar';
-
+import StoragePage from './viewmodels/StoragePage';
+import { Item, Manager, Supplier, Storage, DeliveryBox} from './types/types';
 function App() {
 
-const [managerList, setManagerList] = useState(managers);
-const [supplierList, setSupplierList] = useState(suppliers);
-const [itemList, setItemList] = useState(items);
-const [deliveryBoxesList, setDeliveryBoxesList] = useState(deliveryBoxes);
-const [mainStorageList, setMainStorageList] = useState(mainStorage);
+const [managerList, setManagerList] = useState<Manager[]>([]);
+const [supplierList, setSupplierList] = useState<Supplier[]>([]);
+const [itemList, setItemList] = useState<Item[]>([]);
+const [storageList, setStorageList] = useState<Storage>();
+const [deliveryBoxList, setDeliveryBoxList] = useState<DeliveryBox[]>([]);
+
+useEffect(() => {
+    const loadItems = async () => {
+        setItemList(items);
+    };
+
+    loadItems();
+}, []);
+useEffect(() => {
+    const loadManagers = async () => {
+        setManagerList(managers);
+    };
+    loadManagers();
+}, []);
+useEffect(() => {
+    const loadSuppliers = async () => {
+        setSupplierList(suppliers);
+    };
+    loadSuppliers();
+}, []);
+useEffect(() => {
+    const loadDeliveryBoxes = async () => {
+        setDeliveryBoxList(deliveryBoxes);
+    };
+    loadDeliveryBoxes();
+}, []);
+useEffect(() => {
+    const loadInventory = async () => {
+        setStorageList(mainStorage);
+    };
+    loadInventory();
+}, []);
+
+
                 //data stuff
 
 var accessCtrl: number = 0;
@@ -29,15 +63,28 @@ var accessCtrl: number = 0;
             <NavigationBar accessCtrl={0} />
 
         <Routes>
-            <Route path='/' element={<ItemsPage
+            <Route path='/' element={<StoragePage
                 itemsList={itemList}
                 setItemsList={setItemList}
-                suppliersList={supplierList}/>}/>
+                suppliersList={supplierList}
+                inventory={storageList}
+                />}/>
 
-            <Route path='items' element={<ItemsPage
+            <Route path='inventory' element={<StoragePage
                 itemsList={itemList}
                 setItemsList={setItemList}
-                suppliersList={supplierList}/>}
+                suppliersList={supplierList}
+                inventory={storageList}
+                />
+            }/>
+
+
+            <Route path='items' element={<StoragePage
+                itemsList={itemList}
+                setItemsList={setItemList}
+                suppliersList={supplierList}
+                inventory={storageList}
+                />}
                 />
 
             <Route path='managers' element={<ManagersPage
@@ -71,8 +118,8 @@ var accessCtrl: number = 0;
                     <AddSupplierPage
                         supplierList={supplierList}
                         setSupplierList={setSupplierList}
-                        deliveryBoxesList={deliveryBoxesList}
-                        setDeliveryBoxesList={setDeliveryBoxesList}
+                        deliveryBoxesList={deliveryBoxList}
+                        setDeliveryBoxesList={setDeliveryBoxList}
                         />
                     }
             
