@@ -19,6 +19,12 @@ export function getManagersById(id: number): Manager | undefined {
                     //REDUNDANT
 //=======================================================================================================================
 
+export function addToStorage(itemsList:Item[],storage:Storage,newItem:Item):void {
+    itemsList.push(newItem);
+    storage.itemID.push(newItem.itemID);
+}
+
+
 export function add<T>(items: T[], value:T ): void {
     items.push(value)
 }

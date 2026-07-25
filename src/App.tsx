@@ -14,7 +14,7 @@ function App() {
 const [managerList, setManagerList] = useState<Manager[]>([]);
 const [supplierList, setSupplierList] = useState<Supplier[]>([]);
 const [itemList, setItemList] = useState<Item[]>([]);
-const [storageList, setStorageList] = useState<Storage>();
+const [storageList, setStorageList] = useState<Storage>(mainStorage);
 const [deliveryBoxList, setDeliveryBoxList] = useState<DeliveryBox[]>([]);
 
 useEffect(() => {
@@ -100,6 +100,8 @@ var accessCtrl: number = 0;
                         itemList={itemList}
                         setItemList={setItemList}
                         supplierList={supplierList}
+                        inventory={storageList}
+                        setInventory={setStorageList}
                     />}/>
 
             <Route  

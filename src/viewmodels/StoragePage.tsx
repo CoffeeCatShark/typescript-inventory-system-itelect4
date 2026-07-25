@@ -10,14 +10,17 @@ interface StoragePageProps{
     inventory?: Storage
     setItemsList: React.Dispatch<React.SetStateAction<Item[]>>
 }
-    var selectedID: number | null
+
+
 
 //ADD UPDATE
 //ADD REMOVE
 export function StoragePage({inventory,itemsList, setItemsList,suppliersList}:StoragePageProps){
+    const [selectedID, setSelectedID] = useState<number | null>(null);
+
 
     const handleSelectItem = (selectedItem:Item): void => {
-        selectedID = selectedItem.itemID
+        setSelectedID(selectedItem.itemID)
 
     }
     //GO TO ITEMS 

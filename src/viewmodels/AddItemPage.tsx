@@ -1,19 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import type { Item, Supplier } from "../types/types";
+import type { Item, Storage, Supplier } from "../types/types";
 import { SupplierType } from "../types/types";
-import { add } from "../data/helpers";
+import { add, addToStorage } from "../data/helpers";
 import { globalID, incrementID } from "../data/database"
 import { Link } from "react-router-dom";
 interface AddItemPageProps {
     itemList: Item[];
     setItemList: React.Dispatch<React.SetStateAction<Item[]>>;
     supplierList: Supplier[]
+    inventory: Storage
+    setInventory: React.Dispatch<React.SetStateAction<Storage>>
 }
 
 function AddItemPage({
     itemList,
     setItemList,
-    supplierList
+    supplierList,
+    inventory,
+    setInventory
 }: AddItemPageProps) {
     
     const [itemName, setItemName] = useState("");
@@ -46,9 +50,9 @@ function AddItemPage({
         incrementID();
 
         add(itemList, newItem);
-
+        addToStorage(itemList,inventory,newItem)
         setItemList([...itemList]);
-
+        console.log(itemList)
         //for clearing entry
         setItemName("");
         setItemPrice(0);
@@ -93,11 +97,13 @@ function AddItemPage({
                         {supplier.supplier_name}
                     </option>
                 ))}
+                
+                
             </select>
 
             <select
                 value={itemType}
-                onChange={handleTypeChange}
+                onChange={(e) => setItemType(e.target.value as SupplierType)}
             >
                 <option value={SupplierType.Appliances}>Appliances</option>
                 <option value={SupplierType.Tools}>Tools</option>
