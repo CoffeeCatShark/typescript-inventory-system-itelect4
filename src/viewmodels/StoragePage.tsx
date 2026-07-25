@@ -4,6 +4,7 @@ import ItemCard from "./components/ItemCard";
 import SupplierCard from "./components/SupplierCard";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 interface StoragePageProps{
     itemsList: Item[]
     suppliersList: Supplier[]
@@ -17,11 +18,10 @@ interface StoragePageProps{
 //ADD REMOVE
 export function StoragePage({inventory,itemsList, setItemsList,suppliersList}:StoragePageProps){
     const [selectedID, setSelectedID] = useState<number | null>(null);
+const navigate = useNavigate();
 
-
-    const handleSelectItem = (selectedItem:Item): void => {
-        setSelectedID(selectedItem.itemID)
-
+    const handleEdit = (selectedItem:Item): void => {
+        navigate(`/items/edit/${selectedItem.itemID}`);
     }
     //GO TO ITEMS 
     if(!inventory) return null
@@ -38,8 +38,7 @@ export function StoragePage({inventory,itemsList, setItemsList,suppliersList}:St
                         key={item.itemID}
                         item={item}
                         supplierList={suppliersList}
-                        onSelect={handleSelectItem}
-                        handleName={"EDIT"}
+                        onEdit={handleEdit}
                     />
                 );
             })}

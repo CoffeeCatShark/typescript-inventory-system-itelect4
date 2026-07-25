@@ -2,15 +2,14 @@ import type { Item, Supplier } from "../../types/types"
 import { getById } from '../../data/helpers'
 interface ItemCardProps {
     item: Item
-    onSelect: (item: Item) => void;
+    onEdit?: (item: Item) => void;
+    onDelete?: (item: Item) => void;
+    onView?: (item: Item) => void;
     supplierList: Supplier[]
     handleName?: String
 }
 
-function ItemCard({onSelect, item, supplierList,handleName}: ItemCardProps) {
-    const handleClick = (): void => {
-    onSelect(item);
-};
+function ItemCard({onEdit,onDelete,onView, item, supplierList,handleName}: ItemCardProps) {
 
     const itemBrand = getById(supplierList,"supplierId",item.supplierID);
 
@@ -19,7 +18,23 @@ function ItemCard({onSelect, item, supplierList,handleName}: ItemCardProps) {
             <h3>Item Name: {item.itemName}</h3>
             <h3>Item Brand: {itemBrand?.supplier_name}</h3>
             <h3>Item price: :{item.supplierPrice}</h3>
-            <button onClick={handleClick}>{handleName}</button>
+            {onView && (
+                <button onClick={() => onView(item)}>
+                    View
+                </button>
+            )}
+
+            {onEdit && (
+                <button onClick={() => onEdit(item)}>
+                    Edit
+                </button>
+            )}
+
+            {onDelete && (
+                <button onClick={() => onDelete(item)}>
+                    Delete
+                </button>
+            )}
         </div>
     )
 };
