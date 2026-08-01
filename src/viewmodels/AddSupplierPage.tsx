@@ -32,6 +32,7 @@ export function AddSupplierPage({
             deliveryBoxID:_globalID
         }
         const newDeliveryBoxInstance: DeliveryBox = {
+            itemsID: [],
             deliveryBoxID:_globalID,
             ownerID:globalID,
         }

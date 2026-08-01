@@ -45,15 +45,15 @@ export function remove<T, K extends keyof T>(
 export function update<T, K extends keyof T>(
     array: T[],
     key: K,
-    value: T
+    updatedItem: T
 ): boolean {
-    const index = array.findIndex(item => item[key] === value[key]);
+    const index = array.findIndex(item => item[key] === updatedItem[key]);
 
     if (index === -1) {
         return false;
     }
 
-    array[index] = value;
+    array[index] = updatedItem;
     return true;
 }
 

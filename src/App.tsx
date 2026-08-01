@@ -9,6 +9,7 @@ import AddSupplierPage from './viewmodels/AddSupplierPage';
 import NavigationBar from './viewmodels/components/NavigationBar';
 import StoragePage from './viewmodels/StoragePage';
 import EditItemPage from './viewmodels/EditItemPage';
+import EditSupplierPage from './viewmodels/EditSupplierPage';
 import { Item, Manager, Supplier, Storage, DeliveryBox} from './types/types';
 function App() {
 
@@ -138,6 +139,15 @@ var accessCtrl: number = 0;
                         }
             />
 
+                        <Route
+                path="/suppliers/edit/:id"
+                element={
+                    <EditSupplierPage
+                        supplierList={supplierList}
+                        setSupplierList={setSupplierList}
+                    />
+                }
+            />
         </Routes>
     </BrowserRouter>
 

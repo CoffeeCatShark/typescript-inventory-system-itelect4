@@ -3,6 +3,7 @@ import { Supplier } from "../types/types";
 import { remove } from "../data/helpers";
 import SupplierCard from "./components/SupplierCard";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface SuppliersPageProps{
     suppliersList:Supplier[]
@@ -10,11 +11,15 @@ interface SuppliersPageProps{
 }
 
 export function SuppliersPage({suppliersList,setSuppliersList}:SuppliersPageProps) {
-     const handleSelectSupplier = (selectedSupplier: Supplier): void => {
+     const removeSelectSupplier = (selectedSupplier: Supplier): void => {
                 remove(suppliersList, "supplierId", selectedSupplier.supplierId);
             setSuppliersList([...suppliersList])
         }
+        const navigate = useNavigate();
 
+    function handleEdit(selectedSupplier: Supplier) {
+    navigate(`/suppliers/edit/${selectedSupplier.supplierId}`);
+    }
 
     return (
         <>
@@ -22,7 +27,8 @@ export function SuppliersPage({suppliersList,setSuppliersList}:SuppliersPageProp
                 <SupplierCard
                     key={supplier.supplierId}
                     supplier={supplier}
-                    onSelect={handleSelectSupplier}
+                    onDelete={removeSelectSupplier}
+                    onEdit={handleEdit}
                 />
             ))}
 

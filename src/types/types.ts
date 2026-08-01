@@ -28,7 +28,7 @@ export interface Manager{
 
 export interface Supplier{
     supplierId: number,
-    supplier_name: String,
+    supplier_name: string,
     type: SupplierType,
     deliveryBoxID: number
 }
