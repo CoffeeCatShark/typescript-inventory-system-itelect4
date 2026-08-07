@@ -1,4 +1,4 @@
-import { getById } from "../data/helpers";
+import { getById, remove } from "../data/helpers";
 import { Item, Storage, Supplier } from "../types/types";
 import ItemCard from "./components/ItemCard";
 import SupplierCard from "./components/SupplierCard";
@@ -23,6 +23,10 @@ const navigate = useNavigate();
     const handleEdit = (selectedItem:Item): void => {
         navigate(`/items/edit/${selectedItem.itemID}`);
     }
+        function handleDelete(selectedItem: Item): void {
+            remove(itemsList, "itemID", selectedItem.itemID);
+            setItemsList([...itemsList]);
+        }
     //GO TO ITEMS 
     if(!inventory) return null
 
@@ -39,6 +43,7 @@ const navigate = useNavigate();
                         item={item}
                         supplierList={suppliersList}
                         onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
                 );
             })}
