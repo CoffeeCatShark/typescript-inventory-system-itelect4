@@ -1,5 +1,5 @@
-import { Manager, Supplier, DeliveryBox, Item, SupplierType, AuthorizationLvl, Storage } from "../types/types.ts"
-import { managers, suppliers, items, deliveryBoxes, mainStorage} from "./database.ts"
+import { Manager, Supplier, DeliveryBox, Item, Storage } from "../types/types.ts"
+import { managers, suppliers, items, deliveryBoxes} from "./database.ts"
 
 export function getSupplierById(id: number): Supplier | undefined {
     return suppliers.find(s => s.supplierId === id);

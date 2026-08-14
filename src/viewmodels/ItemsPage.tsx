@@ -38,7 +38,7 @@ export default function ItemsPage({
                         key={item.itemID}
                         item={item}
                         supplierList={suppliersList}
-                        onSelect={handleDeleteItem}
+                        onDelete={handleDeleteItem}
                     />
                 ))
             )}

@@ -9,7 +9,7 @@ interface ItemCardProps {
     handleName?: String
 }
 
-function ItemCard({onEdit,onDelete,onView, item, supplierList,handleName}: ItemCardProps) {
+function ItemCard({onEdit,onDelete,onView, item, supplierList}: ItemCardProps) {
 
     const itemBrand = getById(supplierList,"supplierId",item.supplierID);
 

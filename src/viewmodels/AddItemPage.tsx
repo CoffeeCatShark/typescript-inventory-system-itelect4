@@ -16,8 +16,7 @@ function AddItemPage({
     itemList,
     setItemList,
     supplierList,
-    inventory,
-    setInventory
+    inventory
 }: AddItemPageProps) {
     
     const [itemName, setItemName] = useState("");
@@ -29,12 +28,6 @@ function AddItemPage({
     useEffect(() => {
         itemNameRef.current?.focus();
     }, []);
-
-    const handleTypeChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-    ): void => {
-    setItemType(e.target.value as SupplierType);
-    };
 
 
     function AddNewItem() {

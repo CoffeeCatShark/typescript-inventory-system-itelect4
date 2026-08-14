@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Supplier } from '../types/types';
-import { globalID, incrementID, deliveryBoxes } from '../data/database';
+import { globalID, incrementID } from '../data/database';
 import { SupplierType, DeliveryBox } from '../types/types';
 import { add } from "../data/helpers";
 import { Link } from "react-router-dom";

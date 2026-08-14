@@ -1,7 +1,4 @@
-function updateGeneral<T>(items: T[], value:T ): void {
-    items.push(value)
-}
-//^^^ should be in global
+
 
 //*--------------------------------------------------------------ENUMS------------------------------------------------------------*
 // */

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { managers, suppliers, items, deliveryBoxes, mainStorage} from "../src/data/database"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ManagersPage } from './viewmodels/ManagersPage';
@@ -54,7 +54,7 @@ useEffect(() => {
 
                 //data stuff
 
-var accessCtrl: number = 0;
+//var accessCtrl: number = 0;
 
   return (
 <>

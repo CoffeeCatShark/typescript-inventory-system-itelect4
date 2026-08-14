@@ -1,9 +1,7 @@
 import { getById, remove } from "../data/helpers";
 import { Item, Storage, Supplier } from "../types/types";
 import ItemCard from "./components/ItemCard";
-import SupplierCard from "./components/SupplierCard";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 interface StoragePageProps{
     itemsList: Item[]
@@ -17,7 +15,6 @@ interface StoragePageProps{
 //ADD UPDATE
 //ADD REMOVE
 export function StoragePage({inventory,itemsList, setItemsList,suppliersList}:StoragePageProps){
-    const [selectedID, setSelectedID] = useState<number | null>(null);
 const navigate = useNavigate();
 
     const handleEdit = (selectedItem:Item): void => {
