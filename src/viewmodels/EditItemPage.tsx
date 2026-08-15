@@ -1,87 +1,182 @@
-import { Item, Supplier } from "../types/types";
-import { useParams } from "react-router-dom";
-import { getById } from "../data/helpers";
 import { useState } from "react";
-import { update } from "../data/helpers";
-import { useNavigate } from "react-router-dom";
-interface EditItemPageProps {
-    itemList:Item[]
-    setItemList: React.Dispatch<React.SetStateAction<Item[]>>
-    supplierList: Supplier[];
-}
+import {
+    useNavigate,
+    useParams
+} from "react-router-dom";
 
+import type { Item } from "../types/types";
+import { getById } from "../data/helpers";
+import { useDataStore } from "../data/store";
+import { SupplierType } from "../types/types";
 
-export default function EditItemPage({
-    itemList,
-    setItemList,
-    supplierList,
-}: EditItemPageProps) {
-    const navigate = useNavigate();
+export default function EditItemPage() {
+
     const { id } = useParams();
+
+    const navigate = useNavigate();
+
+    const itemList = useDataStore(
+        state => state.items
+    );
+
+    const supplierList = useDataStore(
+        state => state.suppliers
+    );
+
+    const updateItem = useDataStore(
+        state => state.updateItem
+    );
+
     const item = getById(
         itemList,
         "itemID",
         Number(id)
     );
+
     if (!item) {
         return <h2>Item not found.</h2>;
     }
-    const [itemName, setItemName] = useState(item.itemName);
-    const [itemPrice, setItemPrice] = useState(item.supplierPrice);
-    const [itemQuantity, setItemQuantity] = useState(item.deliveredQuantity);
-    const [itemType, setItemType] = useState(item.itemType);
-    const [supplierID, setSupplierID] = useState(item.supplierID);
 
-    var newItem:Item = {
-        itemID: item.itemID,
-        itemName,
-        supplierPrice: itemPrice,
-        deliveredQuantity: itemQuantity,
-        itemType,
-        supplierID,
-    }
+    return (
+        <EditItemForm
+            item={item}
+            supplierList={supplierList}
+            updateItem={updateItem}
+            navigate={navigate}
+        />
+    );
+}
 
 
+interface EditItemFormProps {
+    item: Item;
+    supplierList: {
+        supplierId: number;
+        supplier_name: string;
+    }[];
+    updateItem: (item: Item) => void;
+    navigate: ReturnType<typeof useNavigate>;
+}
+
+
+function EditItemForm({
+    item,
+    supplierList,
+    updateItem,
+    navigate
+}: EditItemFormProps) {
+
+    const [itemName, setItemName] = useState(
+        item.itemName
+    );
+
+    const [itemPrice, setItemPrice] = useState(
+        item.supplierPrice
+    );
+
+    const [itemQuantity, setItemQuantity] = useState(
+        item.deliveredQuantity
+    );
+
+    const [itemType, setItemType] = useState(
+        item.itemType
+    );
+
+    const [supplierID, setSupplierID] = useState(
+        item.supplierID
+    );
+        function handleItemTypeChange(
+            e: React.ChangeEvent<HTMLSelectElement>
+        ) {
+            const value = Number(e.target.value);
+
+            if (value === 0) {
+                setItemType(SupplierType.Appliances);
+            } else if (value === 1) {
+                setItemType(SupplierType.Tools);
+            } else if (value === 2) {
+                setItemType(SupplierType.Furnitures);
+            }
+        }
     function saveChanges() {
-   
-    if (update(itemList, "itemID", newItem)) {
-        setItemList([...itemList]);
+
+        const updatedItem: Item = {
+            itemID: item.itemID,
+            itemName,
+            supplierPrice: itemPrice,
+            deliveredQuantity: itemQuantity,
+            itemType,
+            supplierID
+        };
+
+        updateItem(updatedItem);
+
         navigate("/inventory");
-        console.log(newItem, itemList)
-    }
     }
 
     return (
         <>
-        <input
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-        />
+            <h2>Edit Item</h2>
 
-        <input
-            type="number"
-            value={itemPrice}
-            onChange={(e) => setItemPrice(Number(e.target.value))}
-        />
+            <input
+                value={itemName}
+                onChange={e =>
+                    setItemName(e.target.value)
+                }
+            />
 
-        <select
-            value={supplierID}
-            onChange={(e) => setSupplierID(Number(e.target.value))}
-        >
-            {supplierList.map(supplier => (
-                <option
-                    key={supplier.supplierId}
-                    value={supplier.supplierId}
-                >
-                    {supplier.supplier_name}
+            <input
+                type="number"
+                value={itemPrice}
+                onChange={e =>
+                    setItemPrice(Number(e.target.value))
+                }
+            />
+
+            <input
+                type="number"
+                value={itemQuantity}
+                onChange={e =>
+                    setItemQuantity(Number(e.target.value))
+                }
+            />
+
+            <select
+                value={supplierID}
+                onChange={e =>
+                    setSupplierID(Number(e.target.value))
+                }
+            >
+                {supplierList.map(supplier => (
+                    <option
+                        key={supplier.supplierId}
+                        value={supplier.supplierId}
+                    >
+                        {supplier.supplier_name}
+                    </option>
+                ))}
+            </select>
+
+            <select
+                value={itemType}
+                onChange={handleItemTypeChange}
+            >
+                <option value={SupplierType.Appliances}>
+                    Appliances
                 </option>
-            ))}
-        </select>
 
-        <button onClick={saveChanges}>
-            Save Changes
-        </button>
+                <option value={SupplierType.Tools}>
+                    Tools
+                </option>
+
+                <option value={SupplierType.Furnitures}>
+                    Furnitures
+                </option>
+            </select>
+
+            <button onClick={saveChanges}>
+                Save Changes
+            </button>
         </>
     );
 }
-

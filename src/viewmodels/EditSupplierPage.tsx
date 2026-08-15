@@ -1,68 +1,114 @@
-import { Supplier } from "../types/types"
-import { useParams } from "react-router-dom"
-import { getById } from "../data/helpers";
 import { useState } from "react";
-import { update } from "../data/helpers";
-import { useNavigate } from "react-router-dom";
+import {
+    useNavigate,
+    useParams
+} from "react-router-dom";
+
+import type { Supplier } from "../types/types";
 import { SupplierType } from "../types/types";
 
-interface EditSupplierPageProps {
-    supplierList: Supplier[];
-    setSupplierList: React.Dispatch<React.SetStateAction<Supplier[]>>;
-}
+import { getById } from "../data/helpers";
+import { useDataStore } from "../data/store";
 
-export default function EditSupplierPage({
-    supplierList,
-    setSupplierList,
-}: EditSupplierPageProps){
-  const navigate = useNavigate();
+export default function EditSupplierPage() {
+
     const { id } = useParams();
 
-    const supplier = getById(
-    supplierList,
-    "supplierId",
-    Number(id)
+    const supplierList = useDataStore(
+        state => state.suppliers
     );
 
-if (!supplier) {
-    return <h2>Supplier not found.</h2>;
+    const updateSupplier = useDataStore(
+        state => state.updateSupplier
+    );
+
+    const supplier = getById(
+        supplierList,
+        "supplierId",
+        Number(id)
+    );
+
+    if (!supplier) {
+        return <h2>Supplier not found.</h2>;
+    }
+
+    return (
+        <EditSupplierForm
+            supplier={supplier}
+            updateSupplier={updateSupplier}
+        />
+    );
 }
-    const [supplierName, setSupplierName] = useState(supplier.supplier_name);
-    const [supplierType, setSupplierType] = useState(supplier.type);
-    const newSupplier: Supplier = {
-        supplierId: supplier.supplierId,
-        supplier_name: supplierName,
-        type: supplierType,
-        deliveryBoxID: supplier.deliveryBoxID
-    };
+
+
+interface EditSupplierFormProps {
+    supplier: Supplier;
+    updateSupplier: (supplier: Supplier) => void;
+}
+
+
+function EditSupplierForm({
+    supplier,
+    updateSupplier
+}: EditSupplierFormProps) {
+
+    const navigate = useNavigate();
+
+    const [supplierName, setSupplierName] =
+        useState(supplier.supplier_name);
+
+    const [supplierType, setSupplierType] =
+        useState(supplier.type);
+
     function saveChanges() {
-    if (update(supplierList, "supplierId", newSupplier)) {
-        setSupplierList([...supplierList]);
+
+        const updatedSupplier: Supplier = {
+            supplierId: supplier.supplierId,
+            supplier_name: supplierName,
+            type: supplierType,
+            deliveryBoxID: supplier.deliveryBoxID
+        };
+
+        updateSupplier(updatedSupplier);
+
         navigate("/suppliers");
     }
-    }
 
-    return(
+    return (
         <>
-        <input
-    value={supplierName}
-    onChange={(e) => setSupplierName(e.target.value)}
-/>
+            <h2>Edit Supplier</h2>
 
-<select
-    value={supplierType}
-    onChange={(e) => setSupplierType(e.target.value as SupplierType)}
->
-    <option value={SupplierType.Appliances}>Appliances</option>
-    <option value={SupplierType.Tools}>Tools</option>
-    <option value={SupplierType.Furnitures}>Furnitures</option>
-</select>
+            <input
+                value={supplierName}
+                onChange={e =>
+                    setSupplierName(e.target.value)
+                }
+            />
 
-<button onClick={saveChanges}>
-    Save Changes
-</button>
+            <select
+                value={supplierType}
+                onChange={e =>
+                    setSupplierType(
+                        e.target.value as SupplierType
+                    )
+                }
+            >
+                <option value={SupplierType.Appliances}>
+                    Appliances
+                </option>
+
+                <option value={SupplierType.Tools}>
+                    Tools
+                </option>
+
+                <option value={SupplierType.Furnitures}>
+                    Furnitures
+                </option>
+            </select>
+
+            <button onClick={saveChanges}>
+                Save Changes
+            </button>
         </>
-    )
-
-
+    );
 }

@@ -1,62 +1,85 @@
-import { useState } from "react"
-import type { Manager } from "../types/types"
-import { add } from "../data/helpers"
-import { globalID, incrementID } from "../data/database"
-import { AuthorizationLvl } from "../types/types"
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-interface AddManagerPageProps {
-    managerList: Manager[];
-    setManagerList: React.Dispatch<React.SetStateAction<Manager[]>>;
-}
+import type { Manager } from "../types/types";
+import { AuthorizationLvl } from "../types/types";
 
-export function AddManagerPage({
-    managerList,
-    setManagerList,
-}: AddManagerPageProps) {
-    const [managerName, setManagerName] = useState("")
-    const [authLevel, setAuthLevel] = useState(AuthorizationLvl.Pending)
+import {
+    globalID,
+    incrementID
+} from "../data/database";
 
+import { useDataStore } from "../data/store";
 
-    function AddNewManager(){
+export default function AddManagerPage() {
+
+    const addManager = useDataStore(
+        state => state.addManager
+    );
+
+    const [managerName, setManagerName] =
+        useState("");
+
+    const [authLevel, setAuthLevel] =
+        useState(AuthorizationLvl.Pending);
+
+    const navigate = useNavigate();
+
+    function AddNewManager() {
+
         const newManager: Manager = {
             managerID: globalID,
-            managerName,
+            managerName: managerName,
             authLevel
-        }
-        incrementID()
-        add(managerList, newManager)
-        setManagerList([...managerList])
+        };
 
-        //for clearing entry 
+        addManager(newManager);
 
-        setManagerName("")
-        setAuthLevel(AuthorizationLvl.Pending)
-        console.log(managerList)
+        incrementID();
+
+        navigate("/managers");
     }
 
-    return (<>
-    
-     <input
+    return (
+        <>
+            <h2>Add Manager</h2>
+
+            <input
                 placeholder="Manager Name"
                 value={managerName}
-                onChange={(e) => setManagerName(e.target.value)}
+                onChange={e =>
+                    setManagerName(e.target.value)
+                }
             />
-    
-     <select
-                     value={authLevel}
-                     onChange={(e) => setAuthLevel(e.target.value as AuthorizationLvl)}
-                 >
-                     <option value={AuthorizationLvl.High}>High</option>
-                     <option value={AuthorizationLvl.Low}>Low</option>
-                     <option value={AuthorizationLvl.Pending}>Pending</option>
-                 </select>
-    <button onClick={AddNewManager}>
+
+                    <select
+                value={authLevel}
+                onChange={e =>
+                    setAuthLevel(
+                        parseInt(e.target.value, 10) as unknown as AuthorizationLvl
+                    )
+                }
+            >
+                <option value={AuthorizationLvl.High}>
+                    High
+                </option>
+
+                <option value={AuthorizationLvl.Low}>
+                    Low
+                </option>
+
+                <option value={AuthorizationLvl.Pending}>
+                    Pending
+                </option>
+            </select>
+
+            <button onClick={AddNewManager}>
                 Add Manager
             </button>
 
-    <Link to="/managers">
-    Back to Manager List
-    </Link>
-    </>)
-}export default AddManagerPage
+            <Link to="/managers">
+                Back to Managers
+            </Link>
+        </>
+    );
+}

@@ -1,23 +1,34 @@
-import type { Manager } from "../../types/types"
+import type { Manager } from "../../types/types";
 
 interface ManagerCardProps {
-    manager: Manager
-    onSelect: (manager: Manager) => void;
+    manager: Manager;
+    onDelete: (manager: Manager) => void;
 }
 
-function ManagerCard({onSelect, manager}: ManagerCardProps) {
-    const handleClick = (): void => {
-    onSelect(manager);
-};
-
+function ManagerCard({
+    manager,
+    onDelete
+}: ManagerCardProps) {
 
     return (
         <div className="manager-card">
-            <h3>{manager.managerName}</h3>
-            <button onClick={handleClick}>Delete</button>
+
+            <h3>
+                Manager: {manager.managerName}
+            </h3>
+
+            <p>
+                Authorization Level: {manager.authLevel}
+            </p>
+
+            <button
+                onClick={() => onDelete(manager)}
+            >
+                DELETE
+            </button>
+
         </div>
-    )
-};
-export default ManagerCard
+    );
+}
 
-
+export default ManagerCard;

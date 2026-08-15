@@ -1,38 +1,44 @@
-import { getById, remove } from "../data/helpers";
-import { Item, Storage, Supplier } from "../types/types";
-import ItemCard from "./components/ItemCard";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-interface StoragePageProps{
-    itemsList: Item[]
-    suppliersList: Supplier[]
-    inventory?: Storage
-    setItemsList: React.Dispatch<React.SetStateAction<Item[]>>
-}
+import { getById } from "../data/helpers";
+import { useDataStore } from "../data/store";
+import ItemCard from "./components/ItemCard";
+import type { Item } from "../types/types";
 
+export default function StoragePage() {
 
+    const itemsList = useDataStore(
+        state => state.items
+    );
 
-//ADD UPDATE
-//ADD REMOVE
-export function StoragePage({inventory,itemsList, setItemsList,suppliersList}:StoragePageProps){
-const navigate = useNavigate();
+    const suppliersList = useDataStore(
+        state => state.suppliers
+    );
 
-    const handleEdit = (selectedItem:Item): void => {
-        navigate(`/items/edit/${selectedItem.itemID}`);
+    const inventory = useDataStore(
+        state => state.storage
+    );
+
+    const navigate = useNavigate();
+
+    function handleEdit(item: Item) {
+        navigate(`/items/edit/${item.itemID}`);
     }
-        function handleDelete(selectedItem: Item): void {
-            remove(itemsList, "itemID", selectedItem.itemID);
-            setItemsList([...itemsList]);
-        }
-    //GO TO ITEMS 
-    if(!inventory) return null
 
-    else
-    return(
+    return (
         <>
+            <h2>Inventory</h2>
+
             {inventory.itemID.map(id => {
-                const item = getById(itemsList,"itemID",id)
-                if (!item) return null;
+
+                const item = getById(
+                    itemsList,
+                    "itemID",
+                    id
+                );
+
+                if (!item) {
+                    return null;
+                }
 
                 return (
                     <ItemCard
@@ -40,16 +46,17 @@ const navigate = useNavigate();
                         item={item}
                         supplierList={suppliersList}
                         onEdit={handleEdit}
-                        onDelete={handleDelete}
                     />
                 );
             })}
 
-            <Link to="/items/new">
-                Add new Items
-            </Link>
+            <button
+                onClick={() =>
+                    navigate("/items/new")
+                }
+            >
+                Add Item
+            </button>
         </>
-    )
-
-
-}export default StoragePage
+    );
+}

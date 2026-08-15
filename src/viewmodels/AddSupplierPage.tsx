@@ -1,79 +1,103 @@
 import { useState } from "react";
-import type { Supplier } from '../types/types';
-import { globalID, incrementID } from '../data/database';
-import { SupplierType, DeliveryBox } from '../types/types';
-import { add } from "../data/helpers";
-import { Link } from "react-router-dom";
-interface AddSupplierPageProps {
-    supplierList: Supplier[];
-    setSupplierList: React.Dispatch<React.SetStateAction<Supplier[]>>;
-    deliveryBoxesList: DeliveryBox[];
-    setDeliveryBoxesList: React.Dispatch<React.SetStateAction<DeliveryBox[]>>;
-}
+import { Link, useNavigate } from "react-router-dom";
 
-export function AddSupplierPage({
-    supplierList,
-    setSupplierList,
-    deliveryBoxesList,
-    setDeliveryBoxesList
-}: AddSupplierPageProps) {
-    const [supplierName, setSupplierName] = useState("")
-    const [supplierType, setSupplierType] = useState(SupplierType.Tools)
-    //GENERATE SUPPLIERBOX ID
+import type {
+    Supplier,
+    DeliveryBox
+} from "../types/types";
 
+import { SupplierType } from "../types/types";
 
-    function AddNewSupplier(){
-        var _globalID: number = globalID + 10
+import {
+    globalID,
+    incrementID
+} from "../data/database";
 
-        const newSupplier:Supplier = {
-            supplierId:globalID,
-            supplier_name:supplierName,
-            type:supplierType,
-            deliveryBoxID:_globalID
-        }
-        const newDeliveryBoxInstance: DeliveryBox = {
-            itemsID: [],
-            deliveryBoxID:_globalID,
-            ownerID:globalID,
-        }
-        incrementID()
-        add(supplierList, newSupplier)
-        add(deliveryBoxesList, newDeliveryBoxInstance)
-        setSupplierList([...supplierList])
-        setDeliveryBoxesList([...deliveryBoxesList])
-        //for clearing entry 
+import { useDataStore } from "../data/store";
 
-        setSupplierName("")
-        setSupplierType(SupplierType.Tools)
-        console.log(deliveryBoxesList)
-        console.log(supplierList)
+export default function AddSupplierPage() {
+
+    const addSupplier = useDataStore(
+        state => state.addSupplier
+    );
+
+    const addDeliveryBox = useDataStore(
+        state => state.addDeliveryBox
+    );
+
+    const [supplierName, setSupplierName] =
+        useState("");
+
+    const [supplierType, setSupplierType] =
+        useState(SupplierType.Tools);
+
+    const navigate = useNavigate();
+
+    function AddNewSupplier() {
+
+        const deliveryBoxID = globalID + 10;
+
+        const newSupplier: Supplier = {
+            supplierId: globalID,
+            supplier_name: supplierName,
+            type: supplierType,
+            deliveryBoxID
+        };
+
+        const newDeliveryBox: DeliveryBox = {
+            deliveryBoxID,
+            ownerID: globalID,
+            itemsID: []
+        };
+
+        addSupplier(newSupplier);
+        addDeliveryBox(newDeliveryBox);
+
+        incrementID();
+
+        navigate("/suppliers");
     }
 
-    return (<>
-   
-        <input
+    return (
+        <>
+            <h2>Add Supplier</h2>
+
+            <input
                 placeholder="Supplier Name"
                 value={supplierName}
-                onChange={(e) => setSupplierName(e.target.value)}
+                onChange={e =>
+                    setSupplierName(e.target.value)
+                }
             />
 
-        <select
+            <select
                 value={supplierType}
-                onChange={(e) => setSupplierType(e.target.value as SupplierType)}
+                onChange={e =>
+                    setSupplierType(
+                        e.target.value as SupplierType
+                    )
+                }
             >
-                <option value={SupplierType.Appliances}>Appliances</option>
-                <option value={SupplierType.Tools}>Tools</option>
-                <option value={SupplierType.Furnitures}>Furnitures</option>
+                <option value={SupplierType.Appliances}>
+                    Appliances
+                </option>
+
+                <option value={SupplierType.Tools}>
+                    Tools
+                </option>
+
+                <option value={SupplierType.Furnitures}>
+                    Furnitures
+                </option>
             </select>
 
-
-        <button onClick={AddNewSupplier}>
+            <button onClick={AddNewSupplier}>
                 Add Supplier
             </button>
 
-        <Link to={"/suppliers"}>
-            Back to Suppliers List
-        </Link>
-
-    </>)
-}export default AddSupplierPage
+            <Link to="/suppliers">
+                Back to Suppliers List
+            </Link>
+        </>
+    );
+}

@@ -1,24 +1,28 @@
-import { useState } from "react";
-import { Supplier } from "../types/types";
-import { remove } from "../data/helpers";
+import { Link, useNavigate } from "react-router-dom";
+import { useDataStore } from "../data/store";
 import SupplierCard from "./components/SupplierCard";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import type { Supplier } from "../types/types";
 
-interface SuppliersPageProps{
-    suppliersList:Supplier[]
-    setSuppliersList: React.Dispatch<React.SetStateAction<Supplier[]>>;
-}
+export default function SuppliersPage() {
 
-export function SuppliersPage({suppliersList,setSuppliersList}:SuppliersPageProps) {
-     const removeSelectSupplier = (selectedSupplier: Supplier): void => {
-                remove(suppliersList, "supplierId", selectedSupplier.supplierId);
-            setSuppliersList([...suppliersList])
-        }
-        const navigate = useNavigate();
+    const suppliersList = useDataStore(
+        state => state.suppliers
+    );
 
-    function handleEdit(selectedSupplier: Supplier) {
-    navigate(`/suppliers/edit/${selectedSupplier.supplierId}`);
+    const removeSupplier = useDataStore(
+        state => state.removeSupplier
+    );
+
+    const navigate = useNavigate();
+
+    function handleEdit(supplier: Supplier) {
+        navigate(
+            `/suppliers/edit/${supplier.supplierId}`
+        );
+    }
+
+    function handleDelete(supplier: Supplier) {
+        removeSupplier(supplier.supplierId);
     }
 
     return (
@@ -27,14 +31,14 @@ export function SuppliersPage({suppliersList,setSuppliersList}:SuppliersPageProp
                 <SupplierCard
                     key={supplier.supplierId}
                     supplier={supplier}
-                    onDelete={removeSelectSupplier}
                     onEdit={handleEdit}
+                    onDelete={handleDelete}
                 />
             ))}
 
-        <Link to="/suppliers/new">
-        Add New Suppliers
-        </Link>
+            <Link to="/suppliers/new">
+                Add Supplier
+            </Link>
         </>
     );
-} export default SuppliersPage
+}

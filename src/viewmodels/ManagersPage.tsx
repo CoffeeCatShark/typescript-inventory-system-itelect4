@@ -1,24 +1,29 @@
-import { Manager } from '../types/types';
+import { Link, useNavigate } from "react-router-dom";
+import { useDataStore } from "../data/store";
+import type { Manager } from "../types/types";
 import ManagerCard from "./components/ManagerCard";
-import {remove} from "../data/helpers"
-import { Link } from "react-router-dom";
-interface ManagerPageProps{
-        managersList: Manager[],
-        setManagersList: React.Dispatch<React.SetStateAction<Manager[]>>;
+
+export default function ManagersPage() {
+
+    const managersList = useDataStore(
+        state => state.managers
+    );
+
+    const removeManager = useDataStore(
+        state => state.removeManager
+    );
+
+    const navigate = useNavigate();
+
+    function handleEdit(manager: Manager) {
+        navigate(
+            `/managers/edit/${manager.managerID}`
+        );
     }
 
-export function ManagersPage({
-    managersList,setManagersList
-}:ManagerPageProps) {
-    
-    const handleSelectManager = (selectedManager: Manager): void => {
-            remove(managersList, "managerID", selectedManager.managerID);
-
-
-        
-        setManagersList([...managersList])
+    function handleDelete(manager: Manager) {
+        removeManager(manager.managerID);
     }
-
 
     return (
         <>
@@ -26,14 +31,13 @@ export function ManagersPage({
                 <ManagerCard
                     key={manager.managerID}
                     manager={manager}
-                    onSelect={handleSelectManager}
+                    onDelete={handleDelete}
                 />
             ))}
 
             <Link to="/managers/new">
-                Add Managers
+                Add Manager
             </Link>
-
         </>
     );
-} export default ManagersPage
+}
