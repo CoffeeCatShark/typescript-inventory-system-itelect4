@@ -1,7 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useDataStore } from "../data/store";
-import type { Manager } from "../types/types";
+import { Link } from "react-router-dom";
+
 import ManagerCard from "./components/ManagerCard";
+
+import type { Manager } from "../types/types";
+
+import { useDataStore } from "../data/store";
 
 export default function ManagersPage() {
 
@@ -13,20 +16,14 @@ export default function ManagersPage() {
         state => state.removeManager
     );
 
-    const navigate = useNavigate();
-
-    function handleEdit(manager: Manager) {
-        navigate(
-            `/managers/edit/${manager.managerID}`
-        );
-    }
-
     function handleDelete(manager: Manager) {
         removeManager(manager.managerID);
     }
 
     return (
         <>
+            <h2>Managers</h2>
+
             {managersList.map(manager => (
                 <ManagerCard
                     key={manager.managerID}
@@ -36,7 +33,7 @@ export default function ManagersPage() {
             ))}
 
             <Link to="/managers/new">
-                Add Manager
+                Add New Manager
             </Link>
         </>
     );

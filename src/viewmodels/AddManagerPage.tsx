@@ -4,33 +4,30 @@ import { Link, useNavigate } from "react-router-dom";
 import type { Manager } from "../types/types";
 import { AuthorizationLvl } from "../types/types";
 
-import {
-    globalID,
-    incrementID
-} from "../data/database";
-
+import { globalID, incrementID } from "../data/database";
 import { useDataStore } from "../data/store";
 
 export default function AddManagerPage() {
+
+    const navigate = useNavigate();
 
     const addManager = useDataStore(
         state => state.addManager
     );
 
-    const [managerName, setManagerName] =
-        useState("");
+    const [managerName, setManagerName] = useState<string>("");
 
     const [authLevel, setAuthLevel] =
-        useState(AuthorizationLvl.Pending);
-
-    const navigate = useNavigate();
+        useState<AuthorizationLvl>(
+            AuthorizationLvl.Pending
+        );
 
     function AddNewManager() {
 
         const newManager: Manager = {
             managerID: globalID,
             managerName: managerName,
-            authLevel
+            authLevel: authLevel
         };
 
         addManager(newManager);
@@ -42,9 +39,10 @@ export default function AddManagerPage() {
 
     return (
         <>
-            <h2>Add Manager</h2>
+            <h2>Add New Manager</h2>
 
             <input
+                type="text"
                 placeholder="Manager Name"
                 value={managerName}
                 onChange={e =>
@@ -52,11 +50,11 @@ export default function AddManagerPage() {
                 }
             />
 
-                    <select
+            <select
                 value={authLevel}
                 onChange={e =>
                     setAuthLevel(
-                        parseInt(e.target.value, 10) as unknown as AuthorizationLvl
+                        e.target.value as AuthorizationLvl
                     )
                 }
             >
@@ -76,6 +74,8 @@ export default function AddManagerPage() {
             <button onClick={AddNewManager}>
                 Add Manager
             </button>
+
+            <br />
 
             <Link to="/managers">
                 Back to Managers

@@ -1,11 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useDataStore } from "../data/store";
+
 import SupplierCard from "./components/SupplierCard";
+
 import type { Supplier } from "../types/types";
+
+import { useDataStore } from "../data/store";
 
 export default function SuppliersPage() {
 
-    const suppliersList = useDataStore(
+    const navigate = useNavigate();
+
+    const supplierList = useDataStore(
         state => state.suppliers
     );
 
@@ -13,12 +18,8 @@ export default function SuppliersPage() {
         state => state.removeSupplier
     );
 
-    const navigate = useNavigate();
-
     function handleEdit(supplier: Supplier) {
-        navigate(
-            `/suppliers/edit/${supplier.supplierId}`
-        );
+        navigate(`/suppliers/edit/${supplier.supplierId}`);
     }
 
     function handleDelete(supplier: Supplier) {
@@ -27,7 +28,9 @@ export default function SuppliersPage() {
 
     return (
         <>
-            {suppliersList.map(supplier => (
+            <h2>Suppliers</h2>
+
+            {supplierList.map(supplier => (
                 <SupplierCard
                     key={supplier.supplierId}
                     supplier={supplier}
@@ -37,7 +40,7 @@ export default function SuppliersPage() {
             ))}
 
             <Link to="/suppliers/new">
-                Add Supplier
+                Add New Supplier
             </Link>
         </>
     );

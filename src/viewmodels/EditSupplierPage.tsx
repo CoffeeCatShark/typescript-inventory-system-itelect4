@@ -14,6 +14,8 @@ export default function EditSupplierPage() {
 
     const { id } = useParams();
 
+    const navigate = useNavigate();
+
     const supplierList = useDataStore(
         state => state.suppliers
     );
@@ -36,6 +38,7 @@ export default function EditSupplierPage() {
         <EditSupplierForm
             supplier={supplier}
             updateSupplier={updateSupplier}
+            navigate={navigate}
         />
     );
 }
@@ -43,22 +46,31 @@ export default function EditSupplierPage() {
 
 interface EditSupplierFormProps {
     supplier: Supplier;
-    updateSupplier: (supplier: Supplier) => void;
+
+    updateSupplier: (
+        supplier: Supplier
+    ) => void;
+
+    navigate: ReturnType<typeof useNavigate>;
 }
 
 
 function EditSupplierForm({
     supplier,
-    updateSupplier
+    updateSupplier,
+    navigate
 }: EditSupplierFormProps) {
 
-    const navigate = useNavigate();
-
     const [supplierName, setSupplierName] =
-        useState(supplier.supplier_name);
+        useState<string>(
+            supplier.supplier_name
+        );
 
     const [supplierType, setSupplierType] =
-        useState(supplier.type);
+        useState<SupplierType>(
+            supplier.type
+        );
+
 
     function saveChanges() {
 
@@ -74,11 +86,13 @@ function EditSupplierForm({
         navigate("/suppliers");
     }
 
+
     return (
         <>
             <h2>Edit Supplier</h2>
 
             <input
+                type="text"
                 value={supplierName}
                 onChange={e =>
                     setSupplierName(e.target.value)
@@ -97,12 +111,12 @@ function EditSupplierForm({
                     Appliances
                 </option>
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-
                 <option value={SupplierType.Furnitures}>
                     Furnitures
+                </option>
+
+                <option value={SupplierType.Tools}>
+                    Tools
                 </option>
             </select>
 

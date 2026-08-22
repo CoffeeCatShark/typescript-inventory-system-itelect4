@@ -4,89 +4,148 @@ import {
     Route
 } from "react-router-dom";
 
-import NavigationBar from "./viewmodels/components/NavigationBar";
-
-import StoragePage from "./viewmodels/StoragePage";
-import ItemsPage from "./viewmodels/ItemsPage";
-
-import ManagersPage from "./viewmodels/ManagersPage";
-import AddManagerPage from "./viewmodels/AddManagerPage";
-
-import SuppliersPage from "./viewmodels/SuppliersPage";
-import AddSupplierPage from "./viewmodels/AddSupplierPage";
-
-import AddItemPage from "./viewmodels/AddItemPage";
-import EditItemPage from "./viewmodels/EditItemPage";
-import EditSupplierPage from "./viewmodels/EditSupplierPage";
-
 import {
     QueryClient,
     QueryClientProvider
 } from "@tanstack/react-query";
 
+import NavigationBar
+    from "./viewmodels/components/NavigationBar";
 
-const queryClient = new QueryClient();
+import StoragePage
+    from "./viewmodels/StoragePage";
+
+import ItemsPage
+    from "./viewmodels/ItemsPage";
+
+import AddItemPage
+    from "./viewmodels/AddItemPage";
+
+import EditItemPage
+    from "./viewmodels/EditItemPage";
+
+import ManagersPage
+    from "./viewmodels/ManagersPage";
+
+import AddManagerPage
+    from "./viewmodels/AddManagerPage";
+
+import SuppliersPage
+    from "./viewmodels/SuppliersPage";
+
+import AddSupplierPage
+    from "./viewmodels/AddSupplierPage";
+
+import EditSupplierPage
+    from "./viewmodels/EditSupplierPage";
+
+
+const queryClient =
+    new QueryClient();
 
 
 function App() {
 
     return (
-        <QueryClientProvider client={queryClient}>
+
+        <QueryClientProvider
+            client={queryClient}
+        >
 
             <BrowserRouter>
 
-                <NavigationBar accessCtrl={0} />
+                <NavigationBar
+                    accessCtrl={0}
+                />
+
 
                 <Routes>
 
+                    {/* INVENTORY */}
+
                     <Route
                         path="/"
-                        element={<StoragePage />}
+                        element={
+                            <StoragePage />
+                        }
                     />
+
 
                     <Route
                         path="/inventory"
-                        element={<StoragePage />}
+                        element={
+                            <StoragePage />
+                        }
                     />
+
+
+                    {/* ITEMS */}
 
                     <Route
                         path="/items"
-                        element={<ItemsPage />}
+                        element={
+                            <ItemsPage />
+                        }
                     />
+
 
                     <Route
                         path="/items/new"
-                        element={<AddItemPage />}
+                        element={
+                            <AddItemPage />
+                        }
                     />
+
 
                     <Route
                         path="/items/edit/:id"
-                        element={<EditItemPage />}
+                        element={
+                            <EditItemPage />
+                        }
                     />
+
+
+                    {/* MANAGERS */}
 
                     <Route
                         path="/managers"
-                        element={<ManagersPage />}
+                        element={
+                            <ManagersPage />
+                        }
                     />
+
 
                     <Route
                         path="/managers/new"
-                        element={<AddManagerPage />}
+                        element={
+                            <AddManagerPage />
+                        }
                     />
+
+
+                    {/* SUPPLIERS */}
 
                     <Route
                         path="/suppliers"
-                        element={<SuppliersPage />}
+                        element={
+                            <SuppliersPage />
+                        }
                     />
+
 
                     <Route
                         path="/suppliers/new"
-                        element={<AddSupplierPage />}
+                        element={
+                            <AddSupplierPage />
+                        }
                     />
+
 
                     <Route
                         path="/suppliers/edit/:id"
-                        element={<EditSupplierPage />}
+                        element={
+                            <EditSupplierPage />
+                        }
                     />
 
                 </Routes>
@@ -96,5 +155,6 @@ function App() {
         </QueryClientProvider>
     );
 }
+
 
 export default App;

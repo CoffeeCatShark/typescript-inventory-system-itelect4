@@ -17,21 +17,19 @@ import { useDataStore } from "../data/store";
 
 export default function AddSupplierPage() {
 
+    const navigate = useNavigate();
+
     const addSupplier = useDataStore(
         state => state.addSupplier
     );
 
-    const addDeliveryBox = useDataStore(
-        state => state.addDeliveryBox
-    );
-
     const [supplierName, setSupplierName] =
-        useState("");
+        useState<string>("");
 
     const [supplierType, setSupplierType] =
-        useState(SupplierType.Tools);
-
-    const navigate = useNavigate();
+        useState<SupplierType>(
+            SupplierType.Tools
+        );
 
     function AddNewSupplier() {
 
@@ -41,17 +39,10 @@ export default function AddSupplierPage() {
             supplierId: globalID,
             supplier_name: supplierName,
             type: supplierType,
-            deliveryBoxID
-        };
-
-        const newDeliveryBox: DeliveryBox = {
-            deliveryBoxID,
-            ownerID: globalID,
-            itemsID: []
+            deliveryBoxID: deliveryBoxID
         };
 
         addSupplier(newSupplier);
-        addDeliveryBox(newDeliveryBox);
 
         incrementID();
 
@@ -60,9 +51,10 @@ export default function AddSupplierPage() {
 
     return (
         <>
-            <h2>Add Supplier</h2>
+            <h2>Add New Supplier</h2>
 
             <input
+                type="text"
                 placeholder="Supplier Name"
                 value={supplierName}
                 onChange={e =>
@@ -82,12 +74,12 @@ export default function AddSupplierPage() {
                     Appliances
                 </option>
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-
                 <option value={SupplierType.Furnitures}>
                     Furnitures
+                </option>
+
+                <option value={SupplierType.Tools}>
+                    Tools
                 </option>
             </select>
 
@@ -95,8 +87,10 @@ export default function AddSupplierPage() {
                 Add Supplier
             </button>
 
+            <br />
+
             <Link to="/suppliers">
-                Back to Suppliers List
+                Back to Suppliers
             </Link>
         </>
     );

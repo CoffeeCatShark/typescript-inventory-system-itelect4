@@ -1,11 +1,14 @@
 import type { Manager } from "../../types/types";
 
 interface ManagerCardProps {
+
     manager: Manager;
+
     onDelete: (manager: Manager) => void;
 }
 
-function ManagerCard({
+
+export default function ManagerCard({
     manager,
     onDelete
 }: ManagerCardProps) {
@@ -14,12 +17,23 @@ function ManagerCard({
         <div className="manager-card">
 
             <h3>
-                Manager: {manager.managerName}
+                Manager:
+                {" "}
+                {manager.managerName}
             </h3>
 
             <p>
-                Authorization Level: {manager.authLevel}
+                Manager ID:
+                {" "}
+                {manager.managerID}
             </p>
+
+            <p>
+                Authorization:
+                {" "}
+                {manager.authLevel}
+            </p>
+
 
             <button
                 onClick={() => onDelete(manager)}
@@ -30,5 +44,3 @@ function ManagerCard({
         </div>
     );
 }
-
-export default ManagerCard;

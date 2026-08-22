@@ -1,35 +1,62 @@
-import type { Supplier } from "../../types/types"
+import type { Supplier } from "../../types/types";
 
 interface SupplierCardProps {
-    supplier: Supplier
-    onEdit?: (supplier:Supplier) => void;
-    onDelete?: (supplier:Supplier) => void;
-    onView?: (supplier:Supplier) => void;
+
+    supplier: Supplier;
+
+    onEdit: (supplier: Supplier) => void;
+
+    onDelete: (supplier: Supplier) => void;
 }
 
-function SupplierCard({onEdit,onDelete,onView, supplier}: SupplierCardProps) {
+
+export default function SupplierCard({
+    supplier,
+    onEdit,
+    onDelete
+}: SupplierCardProps) {
+
     return (
         <div className="supplier-card">
-            <h3>Supplier Name: {supplier.supplier_name}</h3>
-            <h3>Supplier Type: {supplier.type}</h3>
-            {onView && (
-                <button onClick={() => onView(supplier)}>
-                    View
-                </button>
-            )}
 
-            {onEdit && (
-                <button onClick={() => onEdit(supplier)}>
-                    Edit
-                </button>
-            )}
+            <h3>
+                Supplier:
+                {" "}
+                {supplier.supplier_name}
+            </h3>
 
-            {onDelete && (
-                <button onClick={() => onDelete(supplier)}>
-                    Delete
-                </button>
-            )}
+            <p>
+                Supplier ID:
+                {" "}
+                {supplier.supplierId}
+            </p>
+
+            <p>
+                Type:
+                {" "}
+                {supplier.type}
+            </p>
+
+            <p>
+                Delivery Box:
+                {" "}
+                {supplier.deliveryBoxID}
+            </p>
+
+
+            <button
+                onClick={() => onEdit(supplier)}
+            >
+                EDIT
+            </button>
+
+
+            <button
+                onClick={() => onDelete(supplier)}
+            >
+                DELETE
+            </button>
+
         </div>
-    )
-};
-export default SupplierCard
+    );
+}

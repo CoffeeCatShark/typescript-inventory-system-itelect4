@@ -5,9 +5,10 @@ import {
 } from "react-router-dom";
 
 import type { Item } from "../types/types";
+import { SupplierType } from "../types/types";
+
 import { getById } from "../data/helpers";
 import { useDataStore } from "../data/store";
-import { SupplierType } from "../types/types";
 
 export default function EditItemPage() {
 
@@ -50,11 +51,14 @@ export default function EditItemPage() {
 
 interface EditItemFormProps {
     item: Item;
+
     supplierList: {
         supplierId: number;
         supplier_name: string;
     }[];
+
     updateItem: (item: Item) => void;
+
     navigate: ReturnType<typeof useNavigate>;
 }
 
@@ -66,47 +70,31 @@ function EditItemForm({
     navigate
 }: EditItemFormProps) {
 
-    const [itemName, setItemName] = useState(
-        item.itemName
-    );
+    const [itemName, setItemName] =
+        useState<string>(item.itemName);
 
-    const [itemPrice, setItemPrice] = useState(
-        item.supplierPrice
-    );
+    const [itemPrice, setItemPrice] =
+        useState<number>(item.supplierPrice);
 
-    const [itemQuantity, setItemQuantity] = useState(
-        item.deliveredQuantity
-    );
+    const [itemQuantity, setItemQuantity] =
+        useState<number>(item.deliveredQuantity);
 
-    const [itemType, setItemType] = useState(
-        item.itemType
-    );
+    const [itemType, setItemType] =
+        useState<SupplierType>(item.itemType);
 
-    const [supplierID, setSupplierID] = useState(
-        item.supplierID
-    );
-        function handleItemTypeChange(
-            e: React.ChangeEvent<HTMLSelectElement>
-        ) {
-            const value = Number(e.target.value);
+    const [supplierID, setSupplierID] =
+        useState<number>(item.supplierID);
 
-            if (value === 0) {
-                setItemType(SupplierType.Appliances);
-            } else if (value === 1) {
-                setItemType(SupplierType.Tools);
-            } else if (value === 2) {
-                setItemType(SupplierType.Furnitures);
-            }
-        }
+
     function saveChanges() {
 
         const updatedItem: Item = {
             itemID: item.itemID,
-            itemName,
+            itemName: itemName,
             supplierPrice: itemPrice,
             deliveredQuantity: itemQuantity,
-            itemType,
-            supplierID
+            itemType: itemType,
+            supplierID: supplierID
         };
 
         updateItem(updatedItem);
@@ -114,11 +102,13 @@ function EditItemForm({
         navigate("/inventory");
     }
 
+
     return (
         <>
             <h2>Edit Item</h2>
 
             <input
+                type="text"
                 value={itemName}
                 onChange={e =>
                     setItemName(e.target.value)
@@ -159,18 +149,22 @@ function EditItemForm({
 
             <select
                 value={itemType}
-                onChange={handleItemTypeChange}
+                onChange={e =>
+                    setItemType(
+                        e.target.value as SupplierType
+                    )
+                }
             >
                 <option value={SupplierType.Appliances}>
                     Appliances
                 </option>
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-
                 <option value={SupplierType.Furnitures}>
                     Furnitures
+                </option>
+
+                <option value={SupplierType.Tools}>
+                    Tools
                 </option>
             </select>
 

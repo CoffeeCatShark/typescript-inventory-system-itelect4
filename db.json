@@ -1,0 +1,36 @@
+{
+  "items": [],
+  "suppliers": [
+    {
+      "id": "3",
+      "supplier_name": "Apple",
+      "type": "Appliances",
+      "deliveryBoxID": 13
+    }
+  ],
+  "managers": [
+    {
+      "id": "0",
+      "managerName": "Christian Custodio",
+      "authLevel": "High"
+    },
+    {
+      "id": "1",
+      "managerName": "Itchan Custodio",
+      "authLevel": "Low"
+    },
+    {
+      "id": "2",
+      "managerName": "Tano",
+      "authLevel": "Pending"
+    }
+  ],
+  "deliveryBoxes": [
+    {
+      "id": "13",
+      "ownerID": 3,
+      "itemsID": []
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

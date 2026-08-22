@@ -1,39 +1,46 @@
-import { useNavigate } from "react-router-dom";
-import { getById } from "../data/helpers";
-import { useDataStore } from "../data/store";
+import { Link, useNavigate } from "react-router-dom";
+
 import ItemCard from "./components/ItemCard";
+
+import { useDataStore } from "../data/store";
+
 import type { Item } from "../types/types";
 
 export default function StoragePage() {
+
+    const navigate = useNavigate();
 
     const itemsList = useDataStore(
         state => state.items
     );
 
-    const suppliersList = useDataStore(
+    const supplierList = useDataStore(
         state => state.suppliers
     );
 
-    const inventory = useDataStore(
+    const storage = useDataStore(
         state => state.storage
     );
 
-    const navigate = useNavigate();
-
     function handleEdit(item: Item) {
         navigate(`/items/edit/${item.itemID}`);
+    }
+
+    function handleDelete(item: Item) {
+        // If you want deletion from storage:
+        // removeFromStorage(item.itemID)
+
+        console.log("Delete:", item);
     }
 
     return (
         <>
             <h2>Inventory</h2>
 
-            {inventory.itemID.map(id => {
+            {storage.itemID.map(itemID => {
 
-                const item = getById(
-                    itemsList,
-                    "itemID",
-                    id
+                const item = itemsList.find(
+                    item => item.itemID === itemID
                 );
 
                 if (!item) {
@@ -44,19 +51,16 @@ export default function StoragePage() {
                     <ItemCard
                         key={item.itemID}
                         item={item}
-                        supplierList={suppliersList}
+                        supplierList={supplierList}
                         onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
                 );
             })}
 
-            <button
-                onClick={() =>
-                    navigate("/items/new")
-                }
-            >
-                Add Item
-            </button>
+            <Link to="/items/new">
+                Add New Item
+            </Link>
         </>
     );
 }
