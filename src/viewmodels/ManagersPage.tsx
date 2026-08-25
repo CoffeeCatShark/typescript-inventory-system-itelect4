@@ -1,23 +1,56 @@
 import { Link } from "react-router-dom";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
 import ManagerCard from "./components/ManagerCard";
 
 import type { Manager } from "../types/types";
 
-import { useDataStore } from "../data/store";
+import {
+    getManagers,
+    deleteManager
+} from "../api/client";
 
 export default function ManagersPage() {
 
-    const managersList = useDataStore(
-        state => state.managers
-    );
+    const queryClient = useQueryClient();
 
-    const removeManager = useDataStore(
-        state => state.removeManager
-    );
+    const {
+        data: managersList = [],
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ["managers"],
+        queryFn: getManagers
+    });
+
+    const removeManager = useMutation({
+        mutationFn: deleteManager,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["managers"]
+            });
+        }
+    });
 
     function handleDelete(manager: Manager) {
-        removeManager(manager.managerID);
+        removeManager.mutate(manager.managerID);
+    }
+
+    if (isLoading) {
+        return <p>Loading managers...</p>;
+    }
+
+    if (error) {
+        return (
+            <p>
+                Could not reach the API. Make sure
+                `npm run api` is running on port 3001.
+            </p>
+        );
     }
 
     return (

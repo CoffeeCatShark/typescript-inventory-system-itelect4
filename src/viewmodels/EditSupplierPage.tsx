@@ -3,31 +3,51 @@ import {
     useNavigate,
     useParams
 } from "react-router-dom";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
 import type { Supplier } from "../types/types";
 import { SupplierType } from "../types/types";
 
-import { getById } from "../data/helpers";
-import { useDataStore } from "../data/store";
+import {
+    getSuppliers,
+    updateSupplier
+} from "../api/client";
 
 export default function EditSupplierPage() {
 
     const { id } = useParams();
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const supplierList = useDataStore(
-        state => state.suppliers
-    );
+    const {
+        data: supplierList = [],
+        isLoading
+    } = useQuery({
+        queryKey: ["suppliers"],
+        queryFn: getSuppliers
+    });
 
-    const updateSupplier = useDataStore(
-        state => state.updateSupplier
-    );
+    const saveSupplier = useMutation({
+        mutationFn: updateSupplier,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["suppliers"]
+            });
+            navigate("/suppliers");
+        }
+    });
 
-    const supplier = getById(
-        supplierList,
-        "supplierId",
-        Number(id)
+    if (isLoading) {
+        return <p>Loading...</p>;
+    }
+
+    const supplier = supplierList.find(
+        supplier => supplier.supplierId === Number(id)
     );
 
     if (!supplier) {
@@ -37,8 +57,10 @@ export default function EditSupplierPage() {
     return (
         <EditSupplierForm
             supplier={supplier}
-            updateSupplier={updateSupplier}
-            navigate={navigate}
+            onSave={updatedSupplier =>
+                saveSupplier.mutate(updatedSupplier)
+            }
+            isSaving={saveSupplier.isPending}
         />
     );
 }
@@ -46,19 +68,15 @@ export default function EditSupplierPage() {
 
 interface EditSupplierFormProps {
     supplier: Supplier;
-
-    updateSupplier: (
-        supplier: Supplier
-    ) => void;
-
-    navigate: ReturnType<typeof useNavigate>;
+    onSave: (supplier: Supplier) => void;
+    isSaving: boolean;
 }
 
 
 function EditSupplierForm({
     supplier,
-    updateSupplier,
-    navigate
+    onSave,
+    isSaving
 }: EditSupplierFormProps) {
 
     const [supplierName, setSupplierName] =
@@ -81,9 +99,7 @@ function EditSupplierForm({
             deliveryBoxID: supplier.deliveryBoxID
         };
 
-        updateSupplier(updatedSupplier);
-
-        navigate("/suppliers");
+        onSave(updatedSupplier);
     }
 
 
@@ -120,8 +136,11 @@ function EditSupplierForm({
                 </option>
             </select>
 
-            <button onClick={saveChanges}>
-                Save Changes
+            <button
+                onClick={saveChanges}
+                disabled={isSaving}
+            >
+                {isSaving ? "Saving..." : "Save Changes"}
             </button>
         </>
     );

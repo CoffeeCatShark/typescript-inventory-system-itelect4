@@ -1,28 +1,35 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
-import type { Item } from "../types/types";
 import { SupplierType } from "../types/types";
+import type { CreateItem } from "../api/types";
 
-import { globalID, incrementID } from "../data/database";
-import { useDataStore } from "../data/store";
+import { getSuppliers, createItem } from "../api/client";
 
 export default function AddItemPage() {
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    // Zustand
-    const supplierList = useDataStore(
-        state => state.suppliers
-    );
+    const { data: supplierList = [] } = useQuery({
+        queryKey: ["suppliers"],
+        queryFn: getSuppliers
+    });
 
-    const addItem = useDataStore(
-        state => state.addItem
-    );
-
-    const addToStorage = useDataStore(
-        state => state.addToStorage
-    );
+    const addItem = useMutation({
+        mutationFn: createItem,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["items"]
+            });
+            navigate("/inventory");
+        }
+    });
 
     // Form state
     const [itemName, setItemName] = useState<string>("");
@@ -33,9 +40,7 @@ export default function AddItemPage() {
         SupplierType.Appliances
     );
 
-    const [supplierID, setSupplierID] = useState<number>(
-        supplierList[0]?.supplierId ?? 0
-    );
+    const [supplierID, setSupplierID] = useState<number>(0);
 
     const itemNameRef = useRef<HTMLInputElement>(null);
 
@@ -43,10 +48,16 @@ export default function AddItemPage() {
         itemNameRef.current?.focus();
     }, []);
 
+    // Once suppliers load, default the select to the first one
+    useEffect(() => {
+        if (supplierList.length > 0 && supplierID === 0) {
+            setSupplierID(supplierList[0].supplierId);
+        }
+    }, [supplierList, supplierID]);
+
     function AddNewItem() {
 
-        const newItem: Item = {
-            itemID: globalID,
+        const newItem: CreateItem = {
             itemName: itemName,
             itemType: itemType,
             supplierID: supplierID,
@@ -54,17 +65,8 @@ export default function AddItemPage() {
             deliveredQuantity: itemQuantity
         };
 
-        // Add to Zustand
-        addItem(newItem);
-
-        // Add item ID to storage
-        addToStorage(newItem.itemID);
-
-        // Generate next ID
-        incrementID();
-
-        // Return to inventory
-        navigate("/inventory");
+        // POST to db.json via json-server
+        addItem.mutate(newItem);
     }
 
     return (
@@ -136,8 +138,11 @@ export default function AddItemPage() {
                 </option>
             </select>
 
-            <button onClick={AddNewItem}>
-                Add Item
+            <button
+                onClick={AddNewItem}
+                disabled={addItem.isPending}
+            >
+                {addItem.isPending ? "Adding..." : "Add Item"}
             </button>
 
             <br />

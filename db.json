@@ -2,7 +2,7 @@
   "items": [],
   "suppliers": [
     {
-      "id": "3",
+      "id": 444,
       "supplier_name": "Apple",
       "type": "Appliances",
       "deliveryBoxID": 13
@@ -10,24 +10,24 @@
   ],
   "managers": [
     {
-      "id": "0",
+      "id": 0,
       "managerName": "Christian Custodio",
       "authLevel": "High"
     },
     {
-      "id": "1",
+      "id": 1,
       "managerName": "Itchan Custodio",
       "authLevel": "Low"
     },
     {
-      "id": "2",
+      "id": 2,
       "managerName": "Tano",
       "authLevel": "Pending"
     }
   ],
   "deliveryBoxes": [
     {
-      "id": "13",
+      "id": 13,
       "ownerID": 3,
       "itemsID": []
     }

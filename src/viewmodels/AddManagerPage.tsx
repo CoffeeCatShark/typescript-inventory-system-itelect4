@@ -1,19 +1,29 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
-import type { Manager } from "../types/types";
 import { AuthorizationLvl } from "../types/types";
+import type { CreateManager } from "../api/types";
 
-import { globalID, incrementID } from "../data/database";
-import { useDataStore } from "../data/store";
+import { createManager } from "../api/client";
 
 export default function AddManagerPage() {
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const addManager = useDataStore(
-        state => state.addManager
-    );
+    const addManager = useMutation({
+        mutationFn: createManager,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["managers"]
+            });
+            navigate("/managers");
+        }
+    });
 
     const [managerName, setManagerName] = useState<string>("");
 
@@ -24,17 +34,12 @@ export default function AddManagerPage() {
 
     function AddNewManager() {
 
-        const newManager: Manager = {
-            managerID: globalID,
+        const newManager: CreateManager = {
             managerName: managerName,
             authLevel: authLevel
         };
 
-        addManager(newManager);
-
-        incrementID();
-
-        navigate("/managers");
+        addManager.mutate(newManager);
     }
 
     return (
@@ -71,8 +76,11 @@ export default function AddManagerPage() {
                 </option>
             </select>
 
-            <button onClick={AddNewManager}>
-                Add Manager
+            <button
+                onClick={AddNewManager}
+                disabled={addManager.isPending}
+            >
+                {addManager.isPending ? "Adding..." : "Add Manager"}
             </button>
 
             <br />

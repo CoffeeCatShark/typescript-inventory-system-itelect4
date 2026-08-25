@@ -19,6 +19,12 @@ import type {
 
 const API_URL = "http://localhost:3001";
 
+async function nextId(resource: string): Promise<number> {
+    const response = await checkResponse(await fetch(`${API_URL}/${resource}`));
+    const data: { id: number | string }[] = await response.json();
+    const ids = data.map(row => Number(row.id)).filter(id => !Number.isNaN(id));
+    return ids.length === 0 ? 1 : Math.max(...ids) + 1;
+}
 
 // ============================================================
 // HELPER
@@ -52,7 +58,7 @@ export async function getItems(): Promise<Item[]> {
         await response.json();
 
     return data.map(item => ({
-        itemID: item.id,
+        itemID: Number(item.id),
         itemName: item.itemName,
         supplierID: item.supplierID,
         supplierPrice: item.supplierPrice,
@@ -77,7 +83,7 @@ export async function getItem(
         await response.json();
 
     return {
-        itemID: item.id,
+        itemID: Number(item.id),
         itemName: item.itemName,
         supplierID: item.supplierID,
         supplierPrice: item.supplierPrice,
@@ -91,8 +97,9 @@ export async function getItem(
 export async function createItem(
     item: CreateItem
 ): Promise<Item> {
-
+    const id = await nextId("items");   // <-- add this line here
     const response = await checkResponse(
+        
         await fetch(`${API_URL}/items`, {
             method: "POST",
 
@@ -101,7 +108,7 @@ export async function createItem(
                     "application/json"
             },
 
-            body: JSON.stringify(item)
+            body: JSON.stringify({ id, ...item })
         })
     );
 
@@ -109,7 +116,7 @@ export async function createItem(
         await response.json();
 
     return {
-        itemID: created.id,
+        itemID: Number(created.id),
         itemName: created.itemName,
         supplierID: created.supplierID,
         supplierPrice: created.supplierPrice,
@@ -154,7 +161,7 @@ export async function updateItem(
         await response.json();
 
     return {
-        itemID: updated.id,
+        itemID: Number(updated.id),
         itemName: updated.itemName,
         supplierID: updated.supplierID,
         supplierPrice: updated.supplierPrice,
@@ -194,7 +201,7 @@ export async function getSuppliers(): Promise<Supplier[]> {
         await response.json();
 
     return data.map(supplier => ({
-        supplierId: supplier.id,
+        supplierId: Number(supplier.id),
         supplier_name:
             supplier.supplier_name,
         type: supplier.type,
@@ -218,7 +225,7 @@ export async function getSupplier(
         await response.json();
 
     return {
-        supplierId: supplier.id,
+        supplierId: Number(supplier.id),
         supplier_name:
             supplier.supplier_name,
         type: supplier.type,
@@ -231,7 +238,7 @@ export async function getSupplier(
 export async function createSupplier(
     supplier: CreateSupplier
 ): Promise<Supplier> {
-
+    const id = await nextId("suppliers");
     const response = await checkResponse(
         await fetch(`${API_URL}/suppliers`, {
             method: "POST",
@@ -241,7 +248,8 @@ export async function createSupplier(
                     "application/json"
             },
 
-            body: JSON.stringify(supplier)
+            body: JSON.stringify({ id, ...supplier })
+            
         })
     );
 
@@ -249,7 +257,7 @@ export async function createSupplier(
         await response.json();
 
     return {
-        supplierId: created.id,
+        supplierId: Number(created.id),
         supplier_name:
             created.supplier_name,
         type: created.type,
@@ -292,7 +300,7 @@ export async function updateSupplier(
         await response.json();
 
     return {
-        supplierId: updated.id,
+        supplierId: Number(updated.id),
         supplier_name:
             updated.supplier_name,
         type: updated.type,
@@ -331,7 +339,7 @@ export async function getManagers(): Promise<Manager[]> {
         await response.json();
 
     return data.map(manager => ({
-        managerID: manager.id,
+        managerID: Number(manager.id),
         managerName:
             manager.managerName,
         authLevel:
@@ -354,7 +362,7 @@ export async function getManager(
         await response.json();
 
     return {
-        managerID: manager.id,
+        managerID: Number(manager.id),
         managerName:
             manager.managerName,
         authLevel:
@@ -366,7 +374,7 @@ export async function getManager(
 export async function createManager(
     manager: CreateManager
 ): Promise<Manager> {
-
+    const id = await nextId("managers");
     const response = await checkResponse(
         await fetch(`${API_URL}/managers`, {
             method: "POST",
@@ -376,7 +384,7 @@ export async function createManager(
                     "application/json"
             },
 
-            body: JSON.stringify(manager)
+            body: JSON.stringify({ id, ...manager })
         })
     );
 
@@ -384,7 +392,7 @@ export async function createManager(
         await response.json();
 
     return {
-        managerID: created.id,
+        managerID: Number(created.id),
         managerName:
             created.managerName,
         authLevel:
@@ -425,7 +433,7 @@ export async function updateManager(
         await response.json();
 
     return {
-        managerID: updated.id,
+        managerID: Number(updated.id),
         managerName:
             updated.managerName,
         authLevel:
@@ -465,7 +473,7 @@ export async function getDeliveryBoxes(): Promise<DeliveryBox[]> {
         await response.json();
 
     return data.map(box => ({
-        deliveryBoxID: box.id,
+        deliveryBoxID: Number(box.id),
         ownerID: box.ownerID,
         itemsID: box.itemsID
     }));
@@ -475,7 +483,7 @@ export async function getDeliveryBoxes(): Promise<DeliveryBox[]> {
 export async function createDeliveryBox(
     box: CreateDeliveryBox
 ): Promise<DeliveryBox> {
-
+    const id = await nextId("deliveryBoxes");
     const response = await checkResponse(
         await fetch(
             `${API_URL}/deliveryBoxes`,
@@ -487,7 +495,7 @@ export async function createDeliveryBox(
                         "application/json"
                 },
 
-                body: JSON.stringify(box)
+                body: JSON.stringify({ id, ...box })
             }
         )
     );
@@ -496,7 +504,7 @@ export async function createDeliveryBox(
         await response.json();
 
     return {
-        deliveryBoxID: created.id,
+        deliveryBoxID: Number(created.id),
         ownerID: created.ownerID,
         itemsID: created.itemsID
     };
@@ -533,7 +541,7 @@ export async function updateDeliveryBox(
         await response.json();
 
     return {
-        deliveryBoxID: updated.id,
+        deliveryBoxID: Number(updated.id),
         ownerID: updated.ownerID,
         itemsID: updated.itemsID
     };

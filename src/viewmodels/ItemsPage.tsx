@@ -1,33 +1,67 @@
 import { Link, useNavigate } from "react-router-dom";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
 import ItemCard from "./components/ItemCard";
 
 import type { Item } from "../types/types";
 
-import { useDataStore } from "../data/store";
+import {
+    getItems,
+    getSuppliers,
+    deleteItem
+} from "../api/client";
 
 export default function ItemsPage() {
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const itemsList = useDataStore(
-        state => state.items
-    );
+    const {
+        data: itemsList = [],
+        isLoading,
+        error
+    } = useQuery({
+        queryKey: ["items"],
+        queryFn: getItems
+    });
 
-    const supplierList = useDataStore(
-        state => state.suppliers
-    );
+    const { data: supplierList = [] } = useQuery({
+        queryKey: ["suppliers"],
+        queryFn: getSuppliers
+    });
 
-    const removeItem = useDataStore(
-        state => state.removeItem
-    );
+    const removeItem = useMutation({
+        mutationFn: deleteItem,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["items"]
+            });
+        }
+    });
 
     function handleEdit(item: Item) {
         navigate(`/items/edit/${item.itemID}`);
     }
 
     function handleDelete(item: Item) {
-        removeItem(item.itemID);
+        removeItem.mutate(item.itemID);
+    }
+
+    if (isLoading) {
+        return <p>Loading items...</p>;
+    }
+
+    if (error) {
+        return (
+            <p>
+                Could not reach the API. Make sure
+                `npm run api` is running on port 3001.
+            </p>
+        );
     }
 
     return (

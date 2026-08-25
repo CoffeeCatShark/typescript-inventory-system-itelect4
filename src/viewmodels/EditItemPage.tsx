@@ -3,35 +3,57 @@ import {
     useNavigate,
     useParams
 } from "react-router-dom";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
-import type { Item } from "../types/types";
+import type { Item, Supplier } from "../types/types";
 import { SupplierType } from "../types/types";
 
-import { getById } from "../data/helpers";
-import { useDataStore } from "../data/store";
+import {
+    getItems,
+    getSuppliers,
+    updateItem
+} from "../api/client";
 
 export default function EditItemPage() {
 
     const { id } = useParams();
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const itemList = useDataStore(
-        state => state.items
-    );
+    const {
+        data: itemList = [],
+        isLoading
+    } = useQuery({
+        queryKey: ["items"],
+        queryFn: getItems
+    });
 
-    const supplierList = useDataStore(
-        state => state.suppliers
-    );
+    const { data: supplierList = [] } = useQuery({
+        queryKey: ["suppliers"],
+        queryFn: getSuppliers
+    });
 
-    const updateItem = useDataStore(
-        state => state.updateItem
-    );
+    const saveItem = useMutation({
+        mutationFn: updateItem,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["items"]
+            });
+            navigate("/inventory");
+        }
+    });
 
-    const item = getById(
-        itemList,
-        "itemID",
-        Number(id)
+    if (isLoading) {
+        return <p>Loading...</p>;
+    }
+
+    const item = itemList.find(
+        item => item.itemID === Number(id)
     );
 
     if (!item) {
@@ -42,8 +64,10 @@ export default function EditItemPage() {
         <EditItemForm
             item={item}
             supplierList={supplierList}
-            updateItem={updateItem}
-            navigate={navigate}
+            onSave={updatedItem =>
+                saveItem.mutate(updatedItem)
+            }
+            isSaving={saveItem.isPending}
         />
     );
 }
@@ -51,23 +75,17 @@ export default function EditItemPage() {
 
 interface EditItemFormProps {
     item: Item;
-
-    supplierList: {
-        supplierId: number;
-        supplier_name: string;
-    }[];
-
-    updateItem: (item: Item) => void;
-
-    navigate: ReturnType<typeof useNavigate>;
+    supplierList: Supplier[];
+    onSave: (item: Item) => void;
+    isSaving: boolean;
 }
 
 
 function EditItemForm({
     item,
     supplierList,
-    updateItem,
-    navigate
+    onSave,
+    isSaving
 }: EditItemFormProps) {
 
     const [itemName, setItemName] =
@@ -97,9 +115,7 @@ function EditItemForm({
             supplierID: supplierID
         };
 
-        updateItem(updatedItem);
-
-        navigate("/inventory");
+        onSave(updatedItem);
     }
 
 
@@ -168,8 +184,11 @@ function EditItemForm({
                 </option>
             </select>
 
-            <button onClick={saveChanges}>
-                Save Changes
+            <button
+                onClick={saveChanges}
+                disabled={isSaving}
+            >
+                {isSaving ? "Saving..." : "Save Changes"}
             </button>
         </>
     );

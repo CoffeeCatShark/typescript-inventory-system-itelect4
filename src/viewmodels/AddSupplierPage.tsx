@@ -1,27 +1,29 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import type {
-    Supplier,
-    DeliveryBox
-} from "../types/types";
+import {
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
 
 import { SupplierType } from "../types/types";
+import type { CreateSupplier } from "../api/types";
 
-import {
-    globalID,
-    incrementID
-} from "../data/database";
-
-import { useDataStore } from "../data/store";
+import { createSupplier } from "../api/client";
 
 export default function AddSupplierPage() {
 
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    const addSupplier = useDataStore(
-        state => state.addSupplier
-    );
+    const addSupplier = useMutation({
+        mutationFn: createSupplier,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["suppliers"]
+            });
+            navigate("/suppliers");
+        }
+    });
 
     const [supplierName, setSupplierName] =
         useState<string>("");
@@ -33,20 +35,17 @@ export default function AddSupplierPage() {
 
     function AddNewSupplier() {
 
-        const deliveryBoxID = globalID + 10;
-
-        const newSupplier: Supplier = {
-            supplierId: globalID,
+        // NOTE: no delivery box is created here, so this
+        // defaults to 0 (unassigned). Wire up
+        // createDeliveryBox() from api/client.ts if you need
+        // every new supplier to own one.
+        const newSupplier: CreateSupplier = {
             supplier_name: supplierName,
             type: supplierType,
-            deliveryBoxID: deliveryBoxID
+            deliveryBoxID: 0
         };
 
-        addSupplier(newSupplier);
-
-        incrementID();
-
-        navigate("/suppliers");
+        addSupplier.mutate(newSupplier);
     }
 
     return (
@@ -83,8 +82,11 @@ export default function AddSupplierPage() {
                 </option>
             </select>
 
-            <button onClick={AddNewSupplier}>
-                Add Supplier
+            <button
+                onClick={AddNewSupplier}
+                disabled={addSupplier.isPending}
+            >
+                {addSupplier.isPending ? "Adding..." : "Add Supplier"}
             </button>
 
             <br />
