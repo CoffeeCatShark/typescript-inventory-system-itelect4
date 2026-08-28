@@ -1,147 +1,344 @@
-import { useState } from "react";
 import {
+    Link,
     useNavigate,
     useParams
 } from "react-router-dom";
+
 import {
-    useQuery,
     useMutation,
+    useQuery,
     useQueryClient
 } from "@tanstack/react-query";
 
-import type { Supplier } from "../types/types";
-import { SupplierType } from "../types/types";
+import {
+    useForm
+} from "react-hook-form";
 
 import {
-    getSuppliers,
+    zodResolver
+} from "@hookform/resolvers/zod";
+
+import {
+    Button
+} from "@/components/ui/button";
+
+import {
+    Input
+} from "@/components/ui/input";
+
+import {
+    Label
+} from "@/components/ui/label";
+
+import {
+    getSupplier,
     updateSupplier
-} from "../api/client";
+} from "@/api/client";
+
+import {
+    supplierSchema,
+    type SupplierFormData
+} from "@/schema/supplierSchema";
+
+import {
+    SupplierType
+} from "../types/types";
+
 
 export default function EditSupplierPage() {
 
     const { id } = useParams();
 
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
+
+    const queryClient =
+        useQueryClient();
+
+    const supplierId =
+        Number(id);
+
+
+    // ========================================================
+    // GET SUPPLIER
+    // ========================================================
 
     const {
-        data: supplierList = [],
-        isLoading
+        data: supplier,
+        isLoading,
+        error
     } = useQuery({
-        queryKey: ["suppliers"],
-        queryFn: getSuppliers
+        queryKey: [
+            "suppliers",
+            supplierId
+        ],
+
+        queryFn: () =>
+            getSupplier(supplierId),
+
+        enabled:
+            !Number.isNaN(
+                supplierId
+            )
     });
 
-    const saveSupplier = useMutation({
-        mutationFn: updateSupplier,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["suppliers"]
-            });
-            navigate("/suppliers");
+
+    // ========================================================
+    // UPDATE MUTATION
+    // ========================================================
+
+    const updateMutation =
+        useMutation({
+            mutationFn: updateSupplier,
+
+            onSuccess: () => {
+
+                queryClient.invalidateQueries({
+                    queryKey: ["suppliers"]
+                });
+
+                navigate("/suppliers");
+            }
+        });
+
+
+    // ========================================================
+    // FORM
+    // ========================================================
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors
         }
+    } = useForm<SupplierFormData>({
+        resolver:
+            zodResolver(
+                supplierSchema
+            ),
+
+        values: supplier
+            ? {
+                supplier_name:
+                    supplier.supplier_name,
+
+                type:
+                    supplier.type
+            }
+            : undefined
     });
+
+
+    // ========================================================
+    // LOADING
+    // ========================================================
 
     if (isLoading) {
-        return <p>Loading...</p>;
+        return (
+            <p>
+                Loading supplier...
+            </p>
+        );
     }
 
-    const supplier = supplierList.find(
-        supplier => supplier.supplierId === Number(id)
-    );
 
-    if (!supplier) {
-        return <h2>Supplier not found.</h2>;
+    // ========================================================
+    // ERROR
+    // ========================================================
+
+    if (
+        error ||
+        !supplier
+    ) {
+        return (
+            <div>
+
+                <h2>
+                    Supplier not found.
+                </h2>
+
+                <Link to="/suppliers">
+                    Back to Suppliers
+                </Link>
+
+            </div>
+        );
     }
+
+
+    // ========================================================
+    // SAVE
+    // ========================================================
+
+    const existingSupplierID =
+        supplier.supplierId;
+
+    const existingDeliveryBoxID =
+        supplier.deliveryBoxID;
+
+
+    function onSubmit(
+        data: SupplierFormData
+    ) {
+
+        updateMutation.mutate({
+
+            supplierId:
+                existingSupplierID,
+
+            supplier_name:
+                data.supplier_name,
+
+            type:
+                data.type,
+
+            deliveryBoxID:
+                existingDeliveryBoxID
+        });
+    }
+
+
+    // ========================================================
+    // PAGE
+    // ========================================================
 
     return (
-        <EditSupplierForm
-            supplier={supplier}
-            onSave={updatedSupplier =>
-                saveSupplier.mutate(updatedSupplier)
-            }
-            isSaving={saveSupplier.isPending}
-        />
-    );
-}
+        <div>
+
+            <h2>
+                Edit Supplier
+            </h2>
 
 
-interface EditSupplierFormProps {
-    supplier: Supplier;
-    onSave: (supplier: Supplier) => void;
-    isSaving: boolean;
-}
-
-
-function EditSupplierForm({
-    supplier,
-    onSave,
-    isSaving
-}: EditSupplierFormProps) {
-
-    const [supplierName, setSupplierName] =
-        useState<string>(
-            supplier.supplier_name
-        );
-
-    const [supplierType, setSupplierType] =
-        useState<SupplierType>(
-            supplier.type
-        );
-
-
-    function saveChanges() {
-
-        const updatedSupplier: Supplier = {
-            supplierId: supplier.supplierId,
-            supplier_name: supplierName,
-            type: supplierType,
-            deliveryBoxID: supplier.deliveryBoxID
-        };
-
-        onSave(updatedSupplier);
-    }
-
-
-    return (
-        <>
-            <h2>Edit Supplier</h2>
-
-            <input
-                type="text"
-                value={supplierName}
-                onChange={e =>
-                    setSupplierName(e.target.value)
-                }
-            />
-
-            <select
-                value={supplierType}
-                onChange={e =>
-                    setSupplierType(
-                        e.target.value as SupplierType
+            <form
+                onSubmit={
+                    handleSubmit(
+                        onSubmit
                     )
                 }
             >
-                <option value={SupplierType.Appliances}>
-                    Appliances
-                </option>
 
-                <option value={SupplierType.Furnitures}>
-                    Furnitures
-                </option>
+                {/* ==========================================
+                    SUPPLIER NAME
+                ========================================== */}
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-            </select>
+                <div>
 
-            <button
-                onClick={saveChanges}
-                disabled={isSaving}
-            >
-                {isSaving ? "Saving..." : "Save Changes"}
-            </button>
-        </>
+                    <Label
+                        htmlFor="supplier_name"
+                    >
+                        Supplier Name
+                    </Label>
+
+                    <Input
+                        id="supplier_name"
+                        {...register(
+                            "supplier_name"
+                        )}
+                    />
+
+                    {errors.supplier_name && (
+                        <p>
+                            {
+                                errors
+                                    .supplier_name
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                {/* ==========================================
+                    SUPPLIER TYPE
+                ========================================== */}
+
+                <div>
+
+                    <Label
+                        htmlFor="type"
+                    >
+                        Supplier Type
+                    </Label>
+
+                    <select
+                        id="type"
+                        {...register("type")}
+                    >
+
+                        <option
+                            value={
+                                SupplierType.Appliances
+                            }
+                        >
+                            Appliances
+                        </option>
+
+                        <option
+                            value={
+                                SupplierType.Furnitures
+                            }
+                        >
+                            Furnitures
+                        </option>
+
+                        <option
+                            value={
+                                SupplierType.Tools
+                            }
+                        >
+                            Tools
+                        </option>
+
+                    </select>
+
+                    {errors.type && (
+                        <p>
+                            {
+                                errors
+                                    .type
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                {/* ==========================================
+                    SUBMIT
+                ========================================== */}
+
+                <Button
+                    type="submit"
+                    disabled={
+                        updateMutation.isPending
+                    }
+                >
+
+                    {
+                        updateMutation.isPending
+                            ? "Saving..."
+                            : "Save Changes"
+                    }
+
+                </Button>
+
+            </form>
+
+
+            <br />
+
+
+            {/* ==============================================
+                CANCEL
+            ============================================== */}
+
+            <Link to="/suppliers">
+                Cancel
+            </Link>
+
+        </div>
     );
 }

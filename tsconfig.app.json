@@ -10,7 +10,10 @@
     "skipLibCheck": true,
     "strict": true,
 
-    /* Bundler mode */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
@@ -18,7 +21,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": false,

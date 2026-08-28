@@ -1,11 +1,25 @@
 {
-  "items": [],
+  "items": [
+    {
+      "id": 1,
+      "itemName": "ssss",
+      "supplierID": 445,
+      "supplierPrice": 2,
+      "deliveredQuantity": 1,
+      "itemType": "Appliances"
+    }
+  ],
   "suppliers": [
     {
       "id": 444,
       "supplier_name": "Apple",
       "type": "Appliances",
       "deliveryBoxID": 13
+    },
+    {
+      "id": 445,
+      "supplier_name": "sdasdasdd",
+      "type": "Furnitures"
     }
   ],
   "managers": [
@@ -23,12 +37,22 @@
       "id": 2,
       "managerName": "Tano",
       "authLevel": "Pending"
+    },
+    {
+      "id": 3,
+      "managerName": "sadasdsadsad",
+      "authLevel": "Pending"
     }
   ],
   "deliveryBoxes": [
     {
       "id": 13,
       "ownerID": 3,
+      "itemsID": []
+    },
+    {
+      "id": 14,
+      "ownerID": 445,
       "itemsID": []
     }
   ],

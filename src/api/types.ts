@@ -5,7 +5,6 @@ import type {
     DeliveryBox
 } from "../types/types";
 
-
 // ============================================================
 // ITEMS
 // ============================================================
@@ -29,7 +28,7 @@ export type SupplierResponse =
     };
 
 export type CreateSupplier =
-    Omit<Supplier, "supplierId">;
+    Omit<Supplier, "supplierId" | "deliveryBoxID">;
 
 
 // ============================================================

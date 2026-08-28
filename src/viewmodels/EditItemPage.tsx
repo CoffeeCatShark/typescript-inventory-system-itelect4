@@ -1,195 +1,370 @@
-import { useState } from "react";
 import {
+    Link,
     useNavigate,
     useParams
 } from "react-router-dom";
+
 import {
-    useQuery,
     useMutation,
+    useQuery,
     useQueryClient
 } from "@tanstack/react-query";
 
-import type { Item, Supplier } from "../types/types";
-import { SupplierType } from "../types/types";
+import {
+    useForm
+} from "react-hook-form";
 
 import {
-    getItems,
+    zodResolver
+} from "@hookform/resolvers/zod";
+
+import {
+    Button
+} from "@/components/ui/button";
+
+import {
+    Input
+} from "@/components/ui/input";
+
+import {
+    Label
+} from "@/components/ui/label";
+
+import {
+    getItem,
     getSuppliers,
     updateItem
-} from "../api/client";
+} from "@/api/client";
+
+import {
+    itemSchema,
+    type ItemFormData
+} from "@/schema/itemSchema";
+
 
 export default function EditItemPage() {
 
     const { id } = useParams();
 
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
+
+    const queryClient =
+        useQueryClient();
+
+
+    const itemID = Number(id);
+
 
     const {
-        data: itemList = [],
-        isLoading
+        data: item,
+        isLoading: itemLoading,
+        error: itemError
     } = useQuery({
-        queryKey: ["items"],
-        queryFn: getItems
+        queryKey: ["items", itemID],
+        queryFn: () => getItem(itemID),
+        enabled: !Number.isNaN(itemID)
     });
 
-    const { data: supplierList = [] } = useQuery({
+
+    const {
+        data: supplierList = [],
+        isLoading: suppliersLoading
+    } = useQuery({
         queryKey: ["suppliers"],
         queryFn: getSuppliers
     });
 
-    const saveItem = useMutation({
-        mutationFn: updateItem,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["items"]
-            });
-            navigate("/inventory");
+
+    const updateMutation =
+        useMutation({
+            mutationFn: updateItem,
+
+            onSuccess: () => {
+
+                queryClient.invalidateQueries({
+                    queryKey: ["items"]
+                });
+
+                navigate("/items");
+            }
+        });
+
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors
         }
+    } = useForm<ItemFormData>({
+        resolver:
+            zodResolver(itemSchema),
+
+        values: item
+            ? {
+                itemName:
+                    item.itemName,
+
+                supplierID:
+                    item.supplierID,
+
+                supplierPrice:
+                    item.supplierPrice,
+
+                deliveredQuantity:
+                    item.deliveredQuantity,
+
+                itemType:
+                    item.itemType
+            }
+            : undefined
     });
 
-    if (isLoading) {
+
+    if (
+        itemLoading ||
+        suppliersLoading
+    ) {
         return <p>Loading...</p>;
     }
 
-    const item = itemList.find(
-        item => item.itemID === Number(id)
-    );
 
-    if (!item) {
-        return <h2>Item not found.</h2>;
-    }
-
-    return (
-        <EditItemForm
-            item={item}
-            supplierList={supplierList}
-            onSave={updatedItem =>
-                saveItem.mutate(updatedItem)
-            }
-            isSaving={saveItem.isPending}
-        />
-    );
-}
-
-
-interface EditItemFormProps {
-    item: Item;
-    supplierList: Supplier[];
-    onSave: (item: Item) => void;
-    isSaving: boolean;
-}
-
-
-function EditItemForm({
-    item,
-    supplierList,
-    onSave,
-    isSaving
-}: EditItemFormProps) {
-
-    const [itemName, setItemName] =
-        useState<string>(item.itemName);
-
-    const [itemPrice, setItemPrice] =
-        useState<number>(item.supplierPrice);
-
-    const [itemQuantity, setItemQuantity] =
-        useState<number>(item.deliveredQuantity);
-
-    const [itemType, setItemType] =
-        useState<SupplierType>(item.itemType);
-
-    const [supplierID, setSupplierID] =
-        useState<number>(item.supplierID);
-
-
-    function saveChanges() {
-
-        const updatedItem: Item = {
-            itemID: item.itemID,
-            itemName: itemName,
-            supplierPrice: itemPrice,
-            deliveredQuantity: itemQuantity,
-            itemType: itemType,
-            supplierID: supplierID
-        };
-
-        onSave(updatedItem);
+    if (
+        itemError ||
+        !item
+    ) {
+        return (
+            <p>
+                Item not found.
+            </p>
+        );
     }
 
 
+   const existingItemID = item.itemID;
+
+function onSubmit(data: ItemFormData) {
+
+    updateMutation.mutate({
+        itemID: existingItemID,
+        itemName: data.itemName,
+        supplierID: data.supplierID,
+        supplierPrice: data.supplierPrice,
+        itemType: data.itemType,
+        deliveredQuantity: data.deliveredQuantity
+    });
+}
+
+
     return (
-        <>
+        <div>
+
             <h2>Edit Item</h2>
 
-            <input
-                type="text"
-                value={itemName}
-                onChange={e =>
-                    setItemName(e.target.value)
-                }
-            />
-
-            <input
-                type="number"
-                value={itemPrice}
-                onChange={e =>
-                    setItemPrice(Number(e.target.value))
-                }
-            />
-
-            <input
-                type="number"
-                value={itemQuantity}
-                onChange={e =>
-                    setItemQuantity(Number(e.target.value))
-                }
-            />
-
-            <select
-                value={supplierID}
-                onChange={e =>
-                    setSupplierID(Number(e.target.value))
+            <form
+                onSubmit={
+                    handleSubmit(onSubmit)
                 }
             >
-                {supplierList.map(supplier => (
-                    <option
-                        key={supplier.supplierId}
-                        value={supplier.supplierId}
+
+                <div>
+
+                    <Label htmlFor="itemName">
+                        Item Name
+                    </Label>
+
+                    <Input
+                        id="itemName"
+                        {...register("itemName")}
+                    />
+
+                    {errors.itemName && (
+                        <p>
+                            {
+                                errors
+                                    .itemName
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="supplierPrice">
+                        Price
+                    </Label>
+
+                    <Input
+                        id="supplierPrice"
+                        type="number"
+                        step="0.01"
+                        {...register(
+                            "supplierPrice",
+                            {
+                                valueAsNumber:
+                                    true
+                            }
+                        )}
+                    />
+
+                    {errors.supplierPrice && (
+                        <p>
+                            {
+                                errors
+                                    .supplierPrice
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="deliveredQuantity">
+                        Quantity
+                    </Label>
+
+                    <Input
+                        id="deliveredQuantity"
+                        type="number"
+                        {...register(
+                            "deliveredQuantity",
+                            {
+                                valueAsNumber:
+                                    true
+                            }
+                        )}
+                    />
+
+                    {errors.deliveredQuantity && (
+                        <p>
+                            {
+                                errors
+                                    .deliveredQuantity
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="supplierID">
+                        Supplier
+                    </Label>
+
+                    <select
+                        id="supplierID"
+                        {...register(
+                            "supplierID",
+                            {
+                                valueAsNumber:
+                                    true
+                            }
+                        )}
                     >
-                        {supplier.supplier_name}
-                    </option>
-                ))}
-            </select>
 
-            <select
-                value={itemType}
-                onChange={e =>
-                    setItemType(
-                        e.target.value as SupplierType
-                    )
-                }
-            >
-                <option value={SupplierType.Appliances}>
-                    Appliances
-                </option>
+                        {supplierList.map(
+                            supplier => (
+                                <option
+                                    key={
+                                        supplier
+                                            .supplierId
+                                    }
+                                    value={
+                                        supplier
+                                            .supplierId
+                                    }
+                                >
+                                    {
+                                        supplier
+                                            .supplier_name
+                                    }
+                                </option>
+                            )
+                        )}
 
-                <option value={SupplierType.Furnitures}>
-                    Furnitures
-                </option>
+                    </select>
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-            </select>
+                    {errors.supplierID && (
+                        <p>
+                            {
+                                errors
+                                    .supplierID
+                                    .message
+                            }
+                        </p>
+                    )}
 
-            <button
-                onClick={saveChanges}
-                disabled={isSaving}
-            >
-                {isSaving ? "Saving..." : "Save Changes"}
-            </button>
-        </>
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="itemType">
+                        Item Type
+                    </Label>
+
+                    <select
+                        id="itemType"
+                        {...register("itemType")}
+                    >
+
+                        <option value="Appliances">
+                            Appliances
+                        </option>
+
+                        <option value="Furnitures">
+                            Furnitures
+                        </option>
+
+                        <option value="Tools">
+                            Tools
+                        </option>
+
+                    </select>
+
+                    {errors.itemType && (
+                        <p>
+                            {
+                                errors
+                                    .itemType
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <Button
+                    type="submit"
+                    disabled={
+                        updateMutation.isPending
+                    }
+                >
+                    {
+                        updateMutation.isPending
+                            ? "Saving..."
+                            : "Save Changes"
+                    }
+                </Button>
+
+            </form>
+
+            <br />
+
+            <Link to="/items">
+                Cancel
+            </Link>
+
+        </div>
     );
 }

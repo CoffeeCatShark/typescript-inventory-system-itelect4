@@ -9,35 +9,20 @@ import {
     QueryClientProvider
 } from "@tanstack/react-query";
 
-import NavigationBar
-    from "./viewmodels/components/NavigationBar";
+import NavigationBar from "./viewmodels/components/NavigationBar";
 
-import StoragePage
-    from "./viewmodels/StoragePage";
+import StoragePage from "./viewmodels/StoragePage";
+import ItemsPage from "./viewmodels/ItemsPage";
 
-import ItemsPage
-    from "./viewmodels/ItemsPage";
+import ManagersPage from "./viewmodels/ManagersPage";
+import AddManagerPage from "./viewmodels/AddManagerPage";
 
-import AddItemPage
-    from "./viewmodels/AddItemPage";
+import SuppliersPage from "./viewmodels/SuppliersPage";
+import AddSupplierPage from "./viewmodels/AddSupplierPage";
 
-import EditItemPage
-    from "./viewmodels/EditItemPage";
-
-import ManagersPage
-    from "./viewmodels/ManagersPage";
-
-import AddManagerPage
-    from "./viewmodels/AddManagerPage";
-
-import SuppliersPage
-    from "./viewmodels/SuppliersPage";
-
-import AddSupplierPage
-    from "./viewmodels/AddSupplierPage";
-
-import EditSupplierPage
-    from "./viewmodels/EditSupplierPage";
+import AddItemPage from "./viewmodels/AddItemPage";
+import EditItemPage from "./viewmodels/EditItemPage";
+import EditSupplierPage from "./viewmodels/EditSupplierPage";
 
 
 const queryClient =
@@ -47,7 +32,6 @@ const queryClient =
 function App() {
 
     return (
-
         <QueryClientProvider
             client={queryClient}
         >
@@ -58,10 +42,7 @@ function App() {
                     accessCtrl={0}
                 />
 
-
                 <Routes>
-
-                    {/* INVENTORY */}
 
                     <Route
                         path="/"
@@ -70,16 +51,12 @@ function App() {
                         }
                     />
 
-
                     <Route
                         path="/inventory"
                         element={
                             <StoragePage />
                         }
                     />
-
-
-                    {/* ITEMS */}
 
                     <Route
                         path="/items"
@@ -88,14 +65,12 @@ function App() {
                         }
                     />
 
-
                     <Route
                         path="/items/new"
                         element={
                             <AddItemPage />
                         }
                     />
-
 
                     <Route
                         path="/items/edit/:id"
@@ -104,16 +79,12 @@ function App() {
                         }
                     />
 
-
-                    {/* MANAGERS */}
-
                     <Route
                         path="/managers"
                         element={
                             <ManagersPage />
                         }
                     />
-
 
                     <Route
                         path="/managers/new"
@@ -122,9 +93,6 @@ function App() {
                         }
                     />
 
-
-                    {/* SUPPLIERS */}
-
                     <Route
                         path="/suppliers"
                         element={
@@ -132,14 +100,12 @@ function App() {
                         }
                     />
 
-
                     <Route
                         path="/suppliers/new"
                         element={
                             <AddSupplierPage />
                         }
                     />
-
 
                     <Route
                         path="/suppliers/edit/:id"
@@ -155,6 +121,5 @@ function App() {
         </QueryClientProvider>
     );
 }
-
 
 export default App;

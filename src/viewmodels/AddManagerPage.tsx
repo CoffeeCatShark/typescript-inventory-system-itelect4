@@ -1,93 +1,190 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+    Link,
+    useNavigate
+} from "react-router-dom";
+
 import {
     useMutation,
     useQueryClient
 } from "@tanstack/react-query";
 
-import { AuthorizationLvl } from "../types/types";
-import type { CreateManager } from "../api/types";
+import {
+    useForm
+} from "react-hook-form";
 
-import { createManager } from "../api/client";
+import {
+    zodResolver
+} from "@hookform/resolvers/zod";
+
+import {
+    Button
+} from "@/components/ui/button";
+
+import {
+    Input
+} from "@/components/ui/input";
+
+import {
+    Label
+} from "@/components/ui/label";
+
+import {
+    createManager
+} from "@/api/client";
+
+import {
+    managerSchema,
+    type ManagerFormData
+} from "@/schema/managerSchema";
+import { AuthorizationLvl } from "@/types/types";
+
 
 export default function AddManagerPage() {
 
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
-    const addManager = useMutation({
-        mutationFn: createManager,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["managers"]
-            });
-            navigate("/managers");
+    const queryClient =
+        useQueryClient();
+
+
+    const createMutation =
+        useMutation({
+            mutationFn: createManager,
+
+            onSuccess: () => {
+
+                queryClient.invalidateQueries({
+                    queryKey: ["managers"]
+                });
+
+                navigate("/managers");
+            }
+        });
+
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors
+        }
+    } = useForm<ManagerFormData>({
+        resolver:
+            zodResolver(managerSchema),
+
+        defaultValues: {
+            managerName: "",
+            authLevel: AuthorizationLvl.Pending
         }
     });
 
-    const [managerName, setManagerName] = useState<string>("");
 
-    const [authLevel, setAuthLevel] =
-        useState<AuthorizationLvl>(
-            AuthorizationLvl.Pending
-        );
+    function onSubmit(
+        data: ManagerFormData
+    ) {
 
-    function AddNewManager() {
-
-        const newManager: CreateManager = {
-            managerName: managerName,
-            authLevel: authLevel
-        };
-
-        addManager.mutate(newManager);
+        createMutation.mutate(data);
     }
 
+
     return (
-        <>
-            <h2>Add New Manager</h2>
+        <div>
 
-            <input
-                type="text"
-                placeholder="Manager Name"
-                value={managerName}
-                onChange={e =>
-                    setManagerName(e.target.value)
-                }
-            />
+            <h2>Add Manager</h2>
 
-            <select
-                value={authLevel}
-                onChange={e =>
-                    setAuthLevel(
-                        e.target.value as AuthorizationLvl
-                    )
+            <form
+                onSubmit={
+                    handleSubmit(onSubmit)
                 }
             >
-                <option value={AuthorizationLvl.High}>
-                    High
-                </option>
 
-                <option value={AuthorizationLvl.Low}>
-                    Low
-                </option>
+                <div>
 
-                <option value={AuthorizationLvl.Pending}>
-                    Pending
-                </option>
-            </select>
+                    <Label htmlFor="managerName">
+                        Manager Name
+                    </Label>
 
-            <button
-                onClick={AddNewManager}
-                disabled={addManager.isPending}
-            >
-                {addManager.isPending ? "Adding..." : "Add Manager"}
-            </button>
+                    <Input
+                        id="managerName"
+                        {...register(
+                            "managerName"
+                        )}
+                    />
+
+                    {errors.managerName && (
+                        <p>
+                            {
+                                errors
+                                    .managerName
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="authLevel">
+                        Authorization Level
+                    </Label>
+
+                    <select
+                        id="authLevel"
+                        {...register(
+                            "authLevel"
+                        )}
+                    >
+
+                        <option value={AuthorizationLvl.High}>
+                            High
+                        </option>
+
+                        <option value={AuthorizationLvl.Low}>
+                            Low
+                        </option>
+
+                        <option value={AuthorizationLvl.Pending}>
+                            Pending
+                        </option>
+
+                    </select>
+
+                    {errors.authLevel && (
+                        <p>
+                            {
+                                errors
+                                    .authLevel
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <Button
+                    type="submit"
+                    disabled={
+                        createMutation.isPending
+                    }
+                >
+                    {
+                        createMutation.isPending
+                            ? "Adding..."
+                            : "Add Manager"
+                    }
+                </Button>
+
+            </form>
 
             <br />
 
             <Link to="/managers">
                 Back to Managers
             </Link>
-        </>
+
+        </div>
     );
 }

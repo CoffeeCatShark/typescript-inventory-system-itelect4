@@ -1,155 +1,334 @@
-import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import {
-    useQuery,
+    Link,
+    useNavigate
+} from "react-router-dom";
+
+import {
     useMutation,
+    useQuery,
     useQueryClient
 } from "@tanstack/react-query";
 
-import { SupplierType } from "../types/types";
-import type { CreateItem } from "../api/types";
+import {
+    useForm
+} from "react-hook-form";
 
-import { getSuppliers, createItem } from "../api/client";
+import {
+    zodResolver
+} from "@hookform/resolvers/zod";
+
+import {
+    Button
+} from "@/components/ui/button";
+
+import {
+    Input
+} from "@/components/ui/input";
+
+import {
+    Label
+} from "@/components/ui/label";
+
+import {
+    getSuppliers,
+    createItem
+} from "@/api/client";
+
+import {
+    itemSchema,
+    type ItemFormData
+} from "@/schema/itemSchema";
+import { SupplierType } from "@/types/types";
+
 
 export default function AddItemPage() {
 
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
-    const { data: supplierList = [] } = useQuery({
+    const queryClient =
+        useQueryClient();
+
+
+    const {
+        data: supplierList = [],
+        isLoading,
+        error
+    } = useQuery({
         queryKey: ["suppliers"],
         queryFn: getSuppliers
     });
 
-    const addItem = useMutation({
-        mutationFn: createItem,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["items"]
-            });
-            navigate("/inventory");
+
+    const createMutation =
+        useMutation({
+            mutationFn: createItem,
+
+            onSuccess: () => {
+
+                queryClient.invalidateQueries({
+                    queryKey: ["items"]
+                });
+
+                navigate("/items");
+            }
+        });
+
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors
+        }
+    } = useForm<ItemFormData>({
+        resolver:
+            zodResolver(itemSchema),
+
+        defaultValues: {
+            itemName: "",
+            supplierID: 0,
+            supplierPrice: 0,
+            deliveredQuantity: 0,
+            itemType: SupplierType.Appliances
         }
     });
 
-    // Form state
-    const [itemName, setItemName] = useState<string>("");
-    const [itemPrice, setItemPrice] = useState<number>(0);
-    const [itemQuantity, setItemQuantity] = useState<number>(0);
 
-    const [itemType, setItemType] = useState<SupplierType>(
-        SupplierType.Appliances
-    );
+    function onSubmit(
+        data: ItemFormData
+    ) {
 
-    const [supplierID, setSupplierID] = useState<number>(0);
-
-    const itemNameRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        itemNameRef.current?.focus();
-    }, []);
-
-    // Once suppliers load, default the select to the first one
-    useEffect(() => {
-        if (supplierList.length > 0 && supplierID === 0) {
-            setSupplierID(supplierList[0].supplierId);
-        }
-    }, [supplierList, supplierID]);
-
-    function AddNewItem() {
-
-        const newItem: CreateItem = {
-            itemName: itemName,
-            itemType: itemType,
-            supplierID: supplierID,
-            supplierPrice: itemPrice,
-            deliveredQuantity: itemQuantity
-        };
-
-        // POST to db.json via json-server
-        addItem.mutate(newItem);
+        createMutation.mutate(data);
     }
 
+
+    if (isLoading) {
+        return <p>Loading suppliers...</p>;
+    }
+
+
+    if (error) {
+        return (
+            <p>
+                Failed to load suppliers.
+            </p>
+        );
+    }
+
+
     return (
-        <>
-            <h2>Add New Item</h2>
+        <div>
 
-            <input
-                ref={itemNameRef}
-                type="text"
-                placeholder="Item Name"
-                value={itemName}
-                onChange={e =>
-                    setItemName(e.target.value)
-                }
-            />
+            <h2>Add Item</h2>
 
-            <input
-                type="number"
-                placeholder="Price"
-                value={itemPrice}
-                onChange={e =>
-                    setItemPrice(Number(e.target.value))
-                }
-            />
-
-            <input
-                type="number"
-                placeholder="Quantity"
-                value={itemQuantity}
-                onChange={e =>
-                    setItemQuantity(Number(e.target.value))
-                }
-            />
-
-            <select
-                value={supplierID}
-                onChange={e =>
-                    setSupplierID(Number(e.target.value))
+            <form
+                onSubmit={
+                    handleSubmit(onSubmit)
                 }
             >
-                {supplierList.map(supplier => (
-                    <option
-                        key={supplier.supplierId}
-                        value={supplier.supplierId}
+
+                <div>
+
+                    <Label htmlFor="itemName">
+                        Item Name
+                    </Label>
+
+                    <Input
+                        id="itemName"
+                        {...register("itemName")}
+                    />
+
+                    {errors.itemName && (
+                        <p>
+                            {
+                                errors
+                                    .itemName
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="supplierPrice">
+                        Price
+                    </Label>
+
+                    <Input
+                        id="supplierPrice"
+                        type="number"
+                        step="0.01"
+                        {...register(
+                            "supplierPrice",
+                            {
+                                valueAsNumber:
+                                    true
+                            }
+                        )}
+                    />
+
+                    {errors.supplierPrice && (
+                        <p>
+                            {
+                                errors
+                                    .supplierPrice
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="deliveredQuantity">
+                        Quantity
+                    </Label>
+
+                    <Input
+                        id="deliveredQuantity"
+                        type="number"
+                        {...register(
+                            "deliveredQuantity",
+                            {
+                                valueAsNumber:
+                                    true
+                            }
+                        )}
+                    />
+
+                    {errors.deliveredQuantity && (
+                        <p>
+                            {
+                                errors
+                                    .deliveredQuantity
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="supplierID">
+                        Supplier
+                    </Label>
+
+                    <select
+                        id="supplierID"
+                        {...register(
+                            "supplierID",
+                            {
+                                valueAsNumber:
+                                    true
+                            }
+                        )}
                     >
-                        {supplier.supplier_name}
-                    </option>
-                ))}
-            </select>
 
-            <select
-                value={itemType}
-                onChange={e =>
-                    setItemType(
-                        e.target.value as SupplierType
-                    )
-                }
-            >
-                <option value={SupplierType.Appliances}>
-                    Appliances
-                </option>
+                        <option value={0}>
+                            Select Supplier
+                        </option>
 
-                <option value={SupplierType.Furnitures}>
-                    Furnitures
-                </option>
+                        {supplierList.map(
+                            supplier => (
+                                <option
+                                    key={
+                                        supplier
+                                            .supplierId
+                                    }
+                                    value={
+                                        supplier
+                                            .supplierId
+                                    }
+                                >
+                                    {
+                                        supplier
+                                            .supplier_name
+                                    }
+                                </option>
+                            )
+                        )}
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-            </select>
+                    </select>
 
-            <button
-                onClick={AddNewItem}
-                disabled={addItem.isPending}
-            >
-                {addItem.isPending ? "Adding..." : "Add Item"}
-            </button>
+                    {errors.supplierID && (
+                        <p>
+                            {
+                                errors
+                                    .supplierID
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="itemType">
+                        Item Type
+                    </Label>
+
+                    <select
+                        id="itemType"
+                        {...register("itemType")}
+                    >
+
+                              <option value={SupplierType.Appliances}>
+                              Appliances
+                            </option>
+
+                            <option value={SupplierType.Furnitures}>
+                                Furnitures
+                            </option>
+
+                            <option value={SupplierType.Tools}>
+                                Tools
+                            </option>
+
+                    </select>
+
+                    {errors.itemType && (
+                        <p>
+                            {
+                                errors
+                                    .itemType
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <Button
+                    type="submit"
+                    disabled={
+                        createMutation.isPending
+                    }
+                >
+                    {
+                        createMutation.isPending
+                            ? "Adding..."
+                            : "Add Item"
+                    }
+                </Button>
+
+            </form>
 
             <br />
 
-            <Link to="/inventory">
-                Back to Inventory
+            <Link to="/items">
+                Back to Items
             </Link>
-        </>
+
+        </div>
     );
 }

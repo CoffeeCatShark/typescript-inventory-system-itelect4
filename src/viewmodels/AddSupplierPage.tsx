@@ -1,99 +1,203 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+    Link,
+    useNavigate
+} from "react-router-dom";
+
 import {
     useMutation,
     useQueryClient
 } from "@tanstack/react-query";
 
-import { SupplierType } from "../types/types";
-import type { CreateSupplier } from "../api/types";
+import {
+    useForm
+} from "react-hook-form";
 
-import { createSupplier } from "../api/client";
+import {
+    zodResolver
+} from "@hookform/resolvers/zod";
+
+import {
+    Button
+} from "@/components/ui/button";
+
+import {
+    Input
+} from "@/components/ui/input";
+
+import {
+    Label
+} from "@/components/ui/label";
+
+import {
+    createSupplier,
+    createDeliveryBox
+} from "@/api/client";
+
+import {
+    supplierSchema,
+    type SupplierFormData
+} from "@/schema/supplierSchema";
+import { SupplierType } from "@/types/types";
+
 
 export default function AddSupplierPage() {
 
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
-    const addSupplier = useMutation({
-        mutationFn: createSupplier,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["suppliers"]
-            });
-            navigate("/suppliers");
+    const queryClient =
+        useQueryClient();
+
+
+    const createSupplierMutation =
+        useMutation({
+            mutationFn: createSupplier,
+
+            onSuccess: async supplier => {
+
+                await createDeliveryBox({
+                    ownerID:
+                        supplier.supplierId,
+
+                    itemsID: []
+                });
+
+                queryClient.invalidateQueries({
+                    queryKey: ["suppliers"]
+                });
+
+                queryClient.invalidateQueries({
+                    queryKey: ["deliveryBoxes"]
+                });
+
+                navigate("/suppliers");
+            }
+        });
+
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors
+        }
+    } = useForm<SupplierFormData>({
+        resolver:
+            zodResolver(supplierSchema),
+
+        defaultValues: {
+            supplier_name: "",
+            type: SupplierType.Appliances
         }
     });
 
-    const [supplierName, setSupplierName] =
-        useState<string>("");
 
-    const [supplierType, setSupplierType] =
-        useState<SupplierType>(
-            SupplierType.Tools
-        );
+    function onSubmit(
+        data: SupplierFormData
+    ) {
 
-    function AddNewSupplier() {
-
-        // NOTE: no delivery box is created here, so this
-        // defaults to 0 (unassigned). Wire up
-        // createDeliveryBox() from api/client.ts if you need
-        // every new supplier to own one.
-        const newSupplier: CreateSupplier = {
-            supplier_name: supplierName,
-            type: supplierType,
-            deliveryBoxID: 0
-        };
-
-        addSupplier.mutate(newSupplier);
+        createSupplierMutation.mutate(data);
     }
 
+
     return (
-        <>
-            <h2>Add New Supplier</h2>
+        <div>
 
-            <input
-                type="text"
-                placeholder="Supplier Name"
-                value={supplierName}
-                onChange={e =>
-                    setSupplierName(e.target.value)
-                }
-            />
+            <h2>Add Supplier</h2>
 
-            <select
-                value={supplierType}
-                onChange={e =>
-                    setSupplierType(
-                        e.target.value as SupplierType
-                    )
+            <form
+                onSubmit={
+                    handleSubmit(onSubmit)
                 }
             >
-                <option value={SupplierType.Appliances}>
-                    Appliances
-                </option>
 
-                <option value={SupplierType.Furnitures}>
-                    Furnitures
-                </option>
+                <div>
 
-                <option value={SupplierType.Tools}>
-                    Tools
-                </option>
-            </select>
+                    <Label htmlFor="supplier_name">
+                        Supplier Name
+                    </Label>
 
-            <button
-                onClick={AddNewSupplier}
-                disabled={addSupplier.isPending}
-            >
-                {addSupplier.isPending ? "Adding..." : "Add Supplier"}
-            </button>
+                    <Input
+                        id="supplier_name"
+                        {...register(
+                            "supplier_name"
+                        )}
+                    />
+
+                    {errors.supplier_name && (
+                        <p>
+                            {
+                                errors
+                                    .supplier_name
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <Label htmlFor="type">
+                        Supplier Type
+                    </Label>
+
+                    <select
+                        id="type"
+                        {...register("type")}
+                    >
+
+                            <option value={SupplierType.Appliances}>
+                                Appliances
+                            </option>
+
+                            <option value={SupplierType.Furnitures}>
+                                Furnitures
+                            </option>
+
+                            <option value={SupplierType.Tools}>
+                                Tools
+                            </option>
+
+
+                    </select>
+
+                    {errors.type && (
+                        <p>
+                            {
+                                errors
+                                    .type
+                                    .message
+                            }
+                        </p>
+                    )}
+
+                </div>
+
+
+                <Button
+                    type="submit"
+                    disabled={
+                        createSupplierMutation
+                            .isPending
+                    }
+                >
+                    {
+                        createSupplierMutation
+                            .isPending
+                            ? "Adding..."
+                            : "Add Supplier"
+                    }
+                </Button>
+
+            </form>
 
             <br />
 
             <Link to="/suppliers">
                 Back to Suppliers
             </Link>
-        </>
+
+        </div>
     );
 }
