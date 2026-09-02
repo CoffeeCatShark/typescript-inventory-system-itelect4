@@ -7,6 +7,22 @@
       "supplierPrice": 2,
       "deliveredQuantity": 1,
       "itemType": "Appliances"
+    },
+    {
+      "id": 2,
+      "itemName": "test",
+      "supplierID": 444,
+      "supplierPrice": 2,
+      "deliveredQuantity": 1,
+      "itemType": "Furnitures"
+    },
+    {
+      "id": 3,
+      "itemName": "test2",
+      "supplierID": 444,
+      "supplierPrice": 2,
+      "deliveredQuantity": 2,
+      "itemType": "Furnitures"
     }
   ],
   "suppliers": [
@@ -27,6 +43,11 @@
       "id": 3,
       "managerName": "sadasdsadsad",
       "authLevel": "Pending"
+    },
+    {
+      "id": 4,
+      "managerName": "Christian Custodio",
+      "authLevel": "High"
     }
   ],
   "deliveryBoxes": [
