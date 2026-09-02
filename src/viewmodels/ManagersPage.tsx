@@ -54,7 +54,7 @@ export default function ManagersPage() {
     }
 
     return (
-        <>
+        <div className="mx-auto w-full max-w-4xl p-6">
             <h2>Managers</h2>
 
             {managersList.map(manager => (
@@ -68,6 +68,6 @@ export default function ManagersPage() {
             <Link to="/managers/new">
                 Add New Manager
             </Link>
-        </>
+        </div>
     );
 }

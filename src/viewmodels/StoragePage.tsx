@@ -71,7 +71,7 @@ export default function StoragePage() {
     }
 
     return (
-        <>
+        <div className="mx-auto w-full max-w-4xl p-6">
             <h2>Inventory</h2>
 
             {itemsList.map(item => (
@@ -87,6 +87,6 @@ export default function StoragePage() {
             <Link to="/items/new">
                 Add New Item
             </Link>
-        </>
+        </div>
     );
 }

@@ -45,6 +45,7 @@ export default function SupplierCard({
 
 
             <button
+             className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                 onClick={() => onEdit(supplier)}
             >
                 EDIT
@@ -52,6 +53,7 @@ export default function SupplierCard({
 
 
             <button
+             className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                 onClick={() => onDelete(supplier)}
             >
                 DELETE

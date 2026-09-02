@@ -23,7 +23,7 @@ import AddSupplierPage from "./viewmodels/AddSupplierPage";
 import AddItemPage from "./viewmodels/AddItemPage";
 import EditItemPage from "./viewmodels/EditItemPage";
 import EditSupplierPage from "./viewmodels/EditSupplierPage";
-
+import "./index.css";
 
 const queryClient =
     new QueryClient();

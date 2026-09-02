@@ -24,21 +24,6 @@
   ],
   "managers": [
     {
-      "id": 0,
-      "managerName": "Christian Custodio",
-      "authLevel": "High"
-    },
-    {
-      "id": 1,
-      "managerName": "Itchan Custodio",
-      "authLevel": "Low"
-    },
-    {
-      "id": 2,
-      "managerName": "Tano",
-      "authLevel": "Pending"
-    },
-    {
       "id": 3,
       "managerName": "sadasdsadsad",
       "authLevel": "Pending"

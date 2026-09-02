@@ -59,7 +59,7 @@ export default function SuppliersPage() {
     }
 
     return (
-        <>
+        <div className="mx-auto w-full max-w-4xl p-6">
             <h2>Suppliers</h2>
 
             {supplierList.map(supplier => (
@@ -74,6 +74,6 @@ export default function SuppliersPage() {
             <Link to="/suppliers/new">
                 Add New Supplier
             </Link>
-        </>
+        </div>
     );
 }

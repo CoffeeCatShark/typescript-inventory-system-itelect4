@@ -88,7 +88,7 @@ export default function AddManagerPage() {
 
 
     return (
-        <div>
+        <div className="mx-auto w-full max-w-4xl p-6">
 
             <h2>Add Manager</h2>
 
@@ -166,6 +166,7 @@ export default function AddManagerPage() {
 
                 <Button
                     type="submit"
+                     className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                     disabled={
                         createMutation.isPending
                     }

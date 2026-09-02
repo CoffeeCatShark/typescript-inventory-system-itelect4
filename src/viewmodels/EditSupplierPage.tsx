@@ -203,7 +203,7 @@ export default function EditSupplierPage() {
     // ========================================================
 
     return (
-        <div>
+        <div className="mx-auto w-full max-w-4xl p-6">
 
             <h2>
                 Edit Supplier
