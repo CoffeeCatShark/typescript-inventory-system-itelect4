@@ -44,6 +44,7 @@ async function checkResponse(
 }
 
 
+
 // ============================================================
 // ITEMS
 // ============================================================
@@ -460,6 +461,12 @@ export async function deleteManager(
 // ============================================================
 // DELIVERY BOXES
 // ============================================================
+
+
+export async function createDeliveryBoxID(type:string):Promise<number> {
+     const deliveryBoxID = await nextId("deliveryBoxes");
+     return deliveryBoxID
+}
 
 export async function getDeliveryBoxes(): Promise<DeliveryBox[]> {
 

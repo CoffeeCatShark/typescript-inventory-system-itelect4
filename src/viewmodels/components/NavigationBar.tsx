@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
+import { useCurrentUser } from "@/data/store";
 
 interface NavigationBarProps {
     accessCtrl: number;
 }
 
 export function NavigationBar({accessCtrl}:NavigationBarProps) {
-    
+    //CHANGE EVERYTHING
     switch(accessCtrl){
         case 0:{
             return (

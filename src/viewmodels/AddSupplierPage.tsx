@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/data/store";
 import {
     Link,
     useNavigate
@@ -38,12 +39,13 @@ import {
     type SupplierFormData
 } from "@/schema/supplierSchema";
 import { SupplierType } from "@/types/types";
-
-
+import { getDeliveryBoxById } from '../data/helpers';
+import { CreateDeliveryBox } from '../api/types';
+import { createDeliveryBoxID } from "@/api/client";
+const deliveryboxID = await createDeliveryBoxID("deliveryBoxes");
 export default function AddSupplierPage() {
 
     const navigate = useNavigate();
-
     const queryClient =
         useQueryClient();
 
@@ -94,7 +96,7 @@ export default function AddSupplierPage() {
     function onSubmit(
         data: SupplierFormData
     ) {
-
+        console.log("Submitting...")
         createSupplierMutation.mutate(data);
     }
 
@@ -174,6 +176,18 @@ export default function AddSupplierPage() {
 
                 </div>
 
+                        <div>
+                <label htmlFor="deliveryBoxID">Delivery Box #</label>
+
+                <input
+                    id="deliveryBoxID"
+                    value={deliveryboxID}
+                    readOnly
+                    {...register("deliveryBoxID", {
+                        valueAsNumber: true
+                    })}
+                />
+            </div>
 
                 <Button
                     type="submit"

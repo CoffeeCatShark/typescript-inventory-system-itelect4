@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 import { SupplierType } from "../types/types";
 
 export const supplierSchema = z.object({
@@ -11,7 +11,9 @@ export const supplierSchema = z.object({
         ),
 
     type:
-        z.nativeEnum(SupplierType)
+        z.enum(SupplierType),
+
+    deliveryBoxID: z.number(),
 });
 
 export type SupplierFormData =

@@ -1,42 +1,7 @@
 {
-  "items": [
-    {
-      "id": 1,
-      "itemName": "ssss",
-      "supplierID": 445,
-      "supplierPrice": 2,
-      "deliveredQuantity": 1,
-      "itemType": "Appliances"
-    },
-    {
-      "id": 2,
-      "itemName": "test",
-      "supplierID": 444,
-      "supplierPrice": 2,
-      "deliveredQuantity": 1,
-      "itemType": "Furnitures"
-    },
-    {
-      "id": 3,
-      "itemName": "test2",
-      "supplierID": 444,
-      "supplierPrice": 2,
-      "deliveredQuantity": 2,
-      "itemType": "Furnitures"
-    }
-  ],
+  "items": [],
   "suppliers": [
-    {
-      "id": 444,
-      "supplier_name": "Apple",
-      "type": "Appliances",
-      "deliveryBoxID": 13
-    },
-    {
-      "id": 445,
-      "supplier_name": "sdasdasdd",
-      "type": "Furnitures"
-    }
+
   ],
   "managers": [
     {
@@ -51,16 +16,7 @@
     }
   ],
   "deliveryBoxes": [
-    {
-      "id": 13,
-      "ownerID": 3,
-      "itemsID": []
-    },
-    {
-      "id": 14,
-      "ownerID": 445,
-      "itemsID": []
-    }
+ 
   ],
   "$schema": "./node_modules/json-server/schema.json"
 }

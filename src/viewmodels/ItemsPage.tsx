@@ -9,6 +9,8 @@ import ItemCard from "./components/ItemCard";
 
 import type { Item } from "../types/types";
 
+import { useCurrentUser } from "@/data/store";
+
 import {
     getItems,
     getSuppliers,
@@ -16,6 +18,9 @@ import {
 } from "../api/client";
 
 export default function ItemsPage() {
+const userID = useCurrentUser((state) => state.userID);
+
+
 
     const navigate = useNavigate();
     const queryClient = useQueryClient();

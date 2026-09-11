@@ -11,7 +11,6 @@ import {
 
 import NavigationBar from "./viewmodels/components/NavigationBar";
 
-import StoragePage from "./viewmodels/StoragePage";
 import ItemsPage from "./viewmodels/ItemsPage";
 
 import ManagersPage from "./viewmodels/ManagersPage";
@@ -24,6 +23,7 @@ import AddItemPage from "./viewmodels/AddItemPage";
 import EditItemPage from "./viewmodels/EditItemPage";
 import EditSupplierPage from "./viewmodels/EditSupplierPage";
 import "./index.css";
+import MainPage from "./viewmodels/MainPage"
 
 const queryClient =
     new QueryClient();
@@ -47,16 +47,10 @@ function App() {
                     <Route
                         path="/"
                         element={
-                            <StoragePage />
+                            <MainPage />
                         }
                     />
 
-                    <Route
-                        path="/inventory"
-                        element={
-                            <StoragePage />
-                        }
-                    />
 
                     <Route
                         path="/items"

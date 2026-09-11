@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/data/store";
 import {
     Link,
     useNavigate,
@@ -34,15 +35,12 @@ import {
     getSupplier,
     updateSupplier
 } from "@/api/client";
-
+import { SupplierType } from "@/types/types";
 import {
     supplierSchema,
     type SupplierFormData
 } from "@/schema/supplierSchema";
 
-import {
-    SupplierType
-} from "../types/types";
 
 
 export default function EditSupplierPage() {
@@ -123,7 +121,9 @@ export default function EditSupplierPage() {
                     supplier.supplier_name,
 
                 type:
-                    supplier.type
+                    supplier.type,
+
+                deliveryBoxID: supplier.deliveryBoxID
             }
             : undefined
     });
@@ -305,6 +305,21 @@ export default function EditSupplierPage() {
 
                 </div>
 
+            {/* ==========================================
+                    SUPPLIER DELIVERYBOX
+                ========================================== */}  
+                <div>
+                <label htmlFor="deliveryboxID">
+                    DeliveryBoxID
+                </label>
+                <Input readOnly
+                        id="deliveryBoxID"
+                        {...register(
+                            "deliveryBoxID"
+                        )}
+                    />
+
+                </div>
 
                 {/* ==========================================
                     SUBMIT
@@ -312,6 +327,7 @@ export default function EditSupplierPage() {
 
                 <Button
                     type="submit"
+                     className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                     disabled={
                         updateMutation.isPending
                     }
