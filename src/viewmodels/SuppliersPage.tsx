@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-
+import { useCurrentUser } from "@/data/store";
 import { list } from "@/api/client";
 import SupplierCard from "@/viewmodels/components/SupplierCard";
-
+import { useNavigate } from "react-router-dom";
 export default function SuppliersPage() {
-
+const navigate = useNavigate()
+const userID = useCurrentUser((state) => state.userID);
     const {
         data: suppliers,
         isLoading,
@@ -25,17 +26,28 @@ export default function SuppliersPage() {
     return (
         <div className="mx-auto w-full max-w-5xl p-6">
 
-            <h1 className="mb-6 text-3xl font-bold">
-                Suppliers
-            </h1>
+            <div className="mb-6 flex items-center justify-between">
+                <h1 className="text-3xl font-bold">
+                    Suppliers
+                </h1>
+
+                <button
+                    className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+                    onClick={() => navigate("/suppliers/new")}
+                >
+                    ADD SUPPLIER
+                </button>
+            </div>
 
             <div className="grid gap-4">
 
                 {(suppliers ?? []).map((supplier) => (
                     <SupplierCard
-                        key={supplier.supplierId}
+                        key={supplier.id}
                         supplier={supplier}
-                        onEdit={() => {}}
+                        onEdit={() => {
+                            navigate(`/suppliers/edit/${supplier.id}`);
+                        }}
                         onDelete={() => {}}
                     />
                 ))}

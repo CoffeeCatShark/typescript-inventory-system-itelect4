@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-
+import { useNavigate } from "react-router-dom";
 import { list } from "@/api/client";
 import ItemCard from "@/viewmodels/components/ItemCard";
+import { useCurrentUser } from "@/data/store";
 
 export default function ItemPage() {
+    const navigate = useNavigate();
+    const userID = useCurrentUser((state) => state.userID);
 
     const {
         data: items,
@@ -33,18 +36,29 @@ export default function ItemPage() {
     return (
         <div className="mx-auto w-full max-w-5xl p-6">
 
-            <h1 className="mb-6 text-3xl font-bold">
-                Items
-            </h1>
+            <div className="mb-6 flex items-center justify-between">
+                <h1 className="text-3xl font-bold">
+                    Items
+                </h1>
+
+                <button
+                    className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+                    onClick={() => navigate("/items/new")}
+                >
+                    ADD ITEM
+                </button>
+            </div>
 
             <div className="grid gap-4">
 
                 {(items ?? []).map((item) => (
                     <ItemCard
-                        key={item.itemID}
+                        key={item.id}
                         item={item}
                         supplierList={suppliers ?? []}
-                        onEdit={() => {}}
+                        onEdit={(item) => {
+                            navigate(`/items/edit/${item.id}`);
+                        }}
                         onDelete={() => {}}
                     />
                 ))}

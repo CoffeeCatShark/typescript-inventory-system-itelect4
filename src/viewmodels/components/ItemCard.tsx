@@ -1,5 +1,4 @@
 import type { Item, Supplier } from "../../types/types";
-import { getById } from "../../data/helpers";
 
 interface ItemCardProps {
     item: Item;
@@ -15,10 +14,8 @@ export default function ItemCard({
     onDelete
 }: ItemCardProps) {
 
-    const supplier = getById(
-        supplierList,
-        "supplierId",
-        item.supplierID
+    const supplier = supplierList.find(
+        (supplier) => supplier.id === item.supplierID
     );
 
     return (
@@ -29,7 +26,7 @@ export default function ItemCard({
             </h3>
 
             <p>
-                Item ID: {item.itemID}
+                Item ID: {item.id}
             </p>
 
             <p>
@@ -42,8 +39,7 @@ export default function ItemCard({
             </p>
 
             <p>
-                Quantity:{" "}
-                {item.deliveredQuantity}
+                Quantity: {item.deliveredQuantity}
             </p>
 
             <p>
@@ -51,14 +47,14 @@ export default function ItemCard({
             </p>
 
             <button
-                className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+            className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                 onClick={() => onEdit(item)}
             >
                 EDIT
             </button>
 
             <button
-                className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+            className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                 onClick={() => onDelete(item)}
             >
                 DELETE

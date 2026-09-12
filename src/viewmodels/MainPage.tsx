@@ -94,8 +94,8 @@ function AccountPage() {
 
     const selectManager = (manager: Manager) => {
 
-        handleLogin(manager.managerID, true, true);
-         navigate("/inventory");
+        handleLogin(manager.id, true, true);
+         navigate("/main");
         
     };
 
@@ -106,8 +106,8 @@ function AccountPage() {
 
     const selectSupplier = (supplier: Supplier) => {
 
-        handleLogin(supplier.supplierId, false, false);
-        navigate ("/inventory")
+        handleLogin(supplier.id, false, false);
+        navigate ("/items")
     };
 
 
@@ -137,7 +137,7 @@ function AccountPage() {
 
                     {(managers ?? []).map((manager) => (
                     <Button
-                        key={manager.managerID}
+                        key={manager.id}
                         onClick={() => selectManager(manager)}
                     >
                         <span>{manager.managerName}</span>
@@ -164,7 +164,7 @@ function AccountPage() {
 
                     {(suppliers ?? []).map((supplier) => (
                     <Button
-                        key={supplier.supplierId}
+                        key={supplier.id}
                         onClick={() => selectSupplier(supplier)}
                     >
                         <span>{supplier.supplier_name}</span>

@@ -25,7 +25,7 @@ export default function ManagerCard({
             <p>
                 Manager ID:
                 {" "}
-                {manager.managerID}
+                {manager.id}
             </p>
 
             <p>

@@ -62,17 +62,13 @@ function App() {
                     <Route
                         path="/items/new"
                         element={
-                            <MainPage />
-                            //<AddItemPage />
+                            <AddItemPage />
                         }
                     />
 
                     <Route
-                        path="/items/edit/:id"
-                        element={
-                            <MainPage />
-                            //<EditItemPage />
-                        }
+                        path="/items/edit/:itemId"
+                        element={<EditItemPage />}
                     />
 
                     <Route
@@ -100,16 +96,21 @@ function App() {
                     <Route
                         path="/suppliers/new"
                         element={
-                            <MainPage />
-                            //<AddSupplierPage />
+                            <AddSupplierPage />
                         }
                     />
 
                     <Route
-                        path="/suppliers/edit/:id"
+                        path="/suppliers/edit/:supplierId"
+                        element={
+                            <EditSupplierPage />
+                        }
+                    />
+
+                    <Route
+                        path="/main"
                         element={
                             <MainPage />
-                            //<EditSupplierPage />
                         }
                     />
 

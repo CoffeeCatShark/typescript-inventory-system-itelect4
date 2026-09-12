@@ -1,14 +1,11 @@
+
 import type { Supplier } from "../../types/types";
 
 interface SupplierCardProps {
-
     supplier: Supplier;
-
     onEdit: (supplier: Supplier) => void;
-
     onDelete: (supplier: Supplier) => void;
 }
-
 
 export default function SupplierCard({
     supplier,
@@ -28,7 +25,7 @@ export default function SupplierCard({
             <p>
                 Supplier ID:
                 {" "}
-                {supplier.supplierId}
+                {supplier.id}
             </p>
 
             <p>
@@ -43,17 +40,15 @@ export default function SupplierCard({
                 {supplier.deliveryBoxID}
             </p>
 
-
             <button
-             className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+                className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                 onClick={() => onEdit(supplier)}
             >
                 EDIT
             </button>
 
-
             <button
-             className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+                className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                 onClick={() => onDelete(supplier)}
             >
                 DELETE
@@ -62,3 +57,4 @@ export default function SupplierCard({
         </div>
     );
 }
+
