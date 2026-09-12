@@ -7,12 +7,12 @@ type CurrentUserStore = {
     isAdmin: boolean
     userID: string | undefined
     isManager?: boolean 
-
+    userName: string | undefined
 
     setPrivileges:(isAdmin:boolean) => void
     setUserID:(userID:string) => void
     setUserType:(isManager: boolean) => void
-    
+    setUserName:(userName: string) => void
     logout: () => void;
 }
 
@@ -22,6 +22,7 @@ export const useCurrentUser = create<CurrentUserStore>()(
             isAdmin: false,
             isManager: false,
             userID: undefined,
+            userName: undefined,
 
             setUserID: (userID) => set({ userID }),
 
@@ -29,11 +30,14 @@ export const useCurrentUser = create<CurrentUserStore>()(
 
             setUserType: (isManager) => set({ isManager }),
 
+            setUserName:(userName) => set({ userName }),
+
             logout: () => {
                 set({
                     userID: undefined,
                     isAdmin: false,
                     isManager: false,
+                    userName: undefined
                 });
             },
         }),

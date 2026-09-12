@@ -1,11 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCurrentUser } from "@/data/store";
-import { list } from "@/api/client";
+import { list, remove } from "@/api/client";
 import SupplierCard from "@/viewmodels/components/SupplierCard";
 import { useNavigate } from "react-router-dom";
+import { Supplier } from "@/types/types";
 export default function SuppliersPage() {
+
+    async function handleDelete(supplier: Supplier) {
+    await remove(`deliveryBoxes/${supplier.deliveryBoxID}`);
+    await remove(`suppliers/${supplier.id}`)
+}
+
 const navigate = useNavigate()
-const userID = useCurrentUser((state) => state.userID);
     const {
         data: suppliers,
         isLoading,
@@ -48,7 +53,7 @@ const userID = useCurrentUser((state) => state.userID);
                         onEdit={() => {
                             navigate(`/suppliers/edit/${supplier.id}`);
                         }}
-                        onDelete={() => {}}
+                        onDelete={(supplier) => {handleDelete(supplier)}}
                     />
                 ))}
 

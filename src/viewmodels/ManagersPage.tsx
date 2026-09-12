@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { list } from "@/api/client";
+import { list, remove } from "@/api/client";
 import ManagerCard from "@/viewmodels/components/ManagerCard";
+import { Manager } from "@/types/types";
 
 export default function ManagersPage() {
+
+    async function handleDelete(manager: Manager) {
+        await remove(`managers/${manager.id}`);
+    }
 const navigate = useNavigate();
     const {
         data: managers,
@@ -43,7 +48,7 @@ const navigate = useNavigate();
                     <ManagerCard
                         key={manager.id}
                         manager={manager}
-                        onDelete={() => {}}
+                        onDelete={(manager) => {handleDelete(manager)}}
                     />
                 ))}
 

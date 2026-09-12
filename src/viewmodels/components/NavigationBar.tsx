@@ -1,40 +1,42 @@
 import { Link } from "react-router-dom";
 import { useCurrentUser } from "@/data/store";
 
-interface NavigationBarProps {
-    accessCtrl: number;
-}
+export default function NavigationBar() {
+    const isAdmin = useCurrentUser((state) => state.isAdmin);
+    const isManager = useCurrentUser((state) => state.isManager);
 
-export function NavigationBar({accessCtrl}:NavigationBarProps) {
-    //CHANGE EVERYTHING
-    switch(accessCtrl){
-        case 0:{
-            return (
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-center px-6 py-4">
-            <Link to="/items">Items</Link> |{" "}
-            <Link to="/managers">Managers</Link> |{" "}
-            <Link to="/suppliers">Suppliers</Link>
+    return (
+        <nav className="flex items-center gap-4 p-4">
+
+
+            {/* Supplier AND Manager */}
+            <Link
+                to="/items"
+                className="rounded-md px-4 py-2 font-medium"
+            >
+                ITEMS
+            </Link>
+
+            {/* Managers only */}
+            {isManager && (
+                <Link
+                    to="/suppliers"
+                    className="rounded-md px-4 py-2 font-medium"
+                >
+                    SUPPLIERS
+                </Link>
+            )}
+
+            {/* Admin managers only */}
+            {isManager && isAdmin && (
+                <Link
+                    to="/managers"
+                    className="rounded-md px-4 py-2 font-medium"
+                >
+                    MANAGERS
+                </Link>
+            )}
+
         </nav>
-    );  // DEFAULT; OPERATOR LEVEL; DEMONSTRATION PAGE
-        }
-
-        case 1:{
-            return (
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-center px-6 py-4">
-            <Link to="/items">Items</Link> |{" "}       
-            <Link to="/managers">Managers</Link> |{" "}
-            <Link to="/suppliers">Suppliers</Link>
-        </nav>//CHANGE ITEMS TO STORAGE
-    );} //FOR MANAGERS
-
-        case 2:{return (
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-center px-6 py-4">
-            <Link to="/items">Items</Link> |{" "}
-            <Link to="/suppliers">Suppliers</Link>
-        </nav>
-    );} //FOR SUPPLIERS
-
-    }
+    );
 }
-
-export default NavigationBar;

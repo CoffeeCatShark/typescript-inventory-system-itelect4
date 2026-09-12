@@ -23,6 +23,9 @@ function AccountPage() {
         (state) => state.setUserType
     );
 
+    const setUserName = useCurrentUser(
+        (state) => state.setUserName
+    )
 
     // ============================================================
     // LOGIN
@@ -31,14 +34,15 @@ function AccountPage() {
     const handleLogin = (
         userID: string,
         privileges: boolean,
-        userType: boolean
+        userType: boolean,
+        userName: string
     ) => {
-
+        setUserName(userName);
         setUserID(userID);
         setPrivileges(privileges);
         setUserType(userType);
 
-        navigate("/inventory");
+        navigate("/main");
     };
 
 
@@ -94,8 +98,8 @@ function AccountPage() {
 
     const selectManager = (manager: Manager) => {
 
-        handleLogin(manager.id, true, true);
-         navigate("/main");
+        handleLogin(manager.id, true, true, manager.managerName);
+         navigate("/items");
         
     };
 
@@ -106,7 +110,7 @@ function AccountPage() {
 
     const selectSupplier = (supplier: Supplier) => {
 
-        handleLogin(supplier.id, false, false);
+        handleLogin(supplier.id, false, false, supplier.supplier_name);
         navigate ("/items")
     };
 

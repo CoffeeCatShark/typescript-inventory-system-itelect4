@@ -1,87 +1,77 @@
 {
   "items": [
     {
-      "itemName": "sadasd",
-      "supplierID": "3",
-      "supplierPrice": 123,
-      "deliveredQuantity": 22,
+      "itemName": "Apple one",
+      "supplierID": "qGoeBnRqCU0",
+      "supplierPrice": 1222,
+      "deliveredQuantity": 100,
       "itemType": "Appliances",
-      "id": "1"
+      "id": "hTlDcB8GwlY"
     },
     {
-      "itemName": "asd",
-      "supplierID": "2",
-      "supplierPrice": 33,
-      "deliveredQuantity": 33,
+      "itemName": "Orange One",
+      "supplierID": "Q7icHgyypbs",
+      "supplierPrice": 2222,
+      "deliveredQuantity": 100,
       "itemType": "Appliances",
-      "id": "_mNPgoK"
+      "id": "h3FC_Tk-WJU"
+    },
+    {
+      "itemName": "Blackberry One",
+      "supplierID": "BE6HNK8EvNQ",
+      "supplierPrice": 3333,
+      "deliveredQuantity": 100,
+      "itemType": "Furnitures",
+      "id": "hWGU4-E5sRI"
     }
   ],
   "suppliers": [
     {
-      "id": "2",
-      "supplier_name": "Blackberry1",
+      "supplier_name": "Apple",
+      "type": "Appliances",
+      "deliveryBoxID": "h_REc3PZCgQ",
+      "id": "qGoeBnRqCU0"
+    },
+    {
+      "supplier_name": "Orange",
+      "type": "Tools",
+      "deliveryBoxID": "cwmd59NbCwo",
+      "id": "Q7icHgyypbs"
+    },
+    {
+      "supplier_name": "Blackberry",
       "type": "Furnitures",
-      "deliveryBoxID": "2"
-    },
-    {
-      "id": "3",
-      "supplier_name": "Blackberry2",
-      "type": "Appliances",
-      "deliveryBoxID": "3"
-    },
-    {
-      "id": "4",
-      "supplier_name": "Blackberry3",
-      "type": "Appliances",
-      "deliveryBoxID": "3"
-    },
-    {
-      "supplier_name": "test",
-      "type": "Appliances",
-      "deliveryBoxID": "1",
-      "id": "bBrFfdQ"
-    },
-    {
-      "supplier_name": "test2",
-      "type": "Appliances",
-      "deliveryBoxID": "dI9qefb",
-      "id": "toYnOoW"
-    },
-    {
-      "supplier_name": "ssdasdasd",
-      "type": "Appliances",
-      "deliveryBoxID": "lOrEHk4",
-      "id": "2fsYcDH"
+      "deliveryBoxID": "7tb8NtJf4DE",
+      "id": "BE6HNK8EvNQ"
     }
   ],
   "managers": [
     {
-      "id": "3",
-      "managerName": "sadasdsadsad",
-      "authLevel": "Pending"
-    },
-    {
       "id": "4",
       "managerName": "Christian Custodio",
       "authLevel": "High"
+    },
+    {
+      "managerName": "Christian Custodio",
+      "authLevel": "High",
+      "id": "Jgg4vrFac6s"
     }
   ],
   "deliveryBoxes": [
     {
-      "ownerID": "bBrFfdQ",
+      "ownerID": "qGoeBnRqCU0",
       "itemsID": [],
-      "id": "1"
+      "id": "h_REc3PZCgQ"
     },
     {
-      "ownerID": "toYnOoW",
+      "ownerID": "Q7icHgyypbs",
       "itemsID": [],
-      "id": "dI9qefb"
+      "id": "cwmd59NbCwo"
     },
     {
-      "ownerID": "2fsYcDH",
+      "ownerID": "BE6HNK8EvNQ",
       "itemsID": [],
-      "id": "lOrEHk4"
+      "id": "7tb8NtJf4DE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

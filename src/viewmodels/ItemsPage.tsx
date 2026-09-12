@@ -1,12 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { list } from "@/api/client";
+import { list, remove } from "@/api/client";
 import ItemCard from "@/viewmodels/components/ItemCard";
 import { useCurrentUser } from "@/data/store";
+import { Item } from "@/types/types";
 
 export default function ItemPage() {
     const navigate = useNavigate();
     const userID = useCurrentUser((state) => state.userID);
+    const isManager = useCurrentUser((state) => state.isManager);
+
+    async function handleDelete(item: Item) {
+    await remove(`items/${item.id}`);
+}
+
 
     const {
         data: items,
@@ -33,6 +40,15 @@ export default function ItemPage() {
         return <p>Failed to load items.</p>;
     }
 
+    const visibleItems = (items ?? []).filter((item) => {
+    if (isManager) {
+        return true;
+    }
+
+    return item.supplierID === userID;
+    });
+
+
     return (
         <div className="mx-auto w-full max-w-5xl p-6">
 
@@ -41,17 +57,19 @@ export default function ItemPage() {
                     Items
                 </h1>
 
+                {!isManager && (
                 <button
-                    className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
                     onClick={() => navigate("/items/new")}
+                    className="rounded-md px-4 py-2 font-medium shadow-sm"
                 >
                     ADD ITEM
                 </button>
+            )}
             </div>
 
             <div className="grid gap-4">
 
-                {(items ?? []).map((item) => (
+                {(visibleItems ?? []).map((item) => (
                     <ItemCard
                         key={item.id}
                         item={item}
@@ -59,7 +77,7 @@ export default function ItemPage() {
                         onEdit={(item) => {
                             navigate(`/items/edit/${item.id}`);
                         }}
-                        onDelete={() => {}}
+                        onDelete={(item) => {handleDelete(item)}}
                     />
                 ))}
 

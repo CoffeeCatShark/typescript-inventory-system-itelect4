@@ -10,16 +10,24 @@ import type {
 // ============================================================
 
 export type CreateManager =
-    Omit<Manager, "managerID">;
+    Omit<Manager, "managerID">& {
+    id?: string;
+};
 
 export type CreateSupplier =
-    Omit<Supplier, "supplierId">;
+    Omit<Supplier, "supplierId">& {
+    id?: string;
+};
 
 export type CreateItem =
-    Omit<Item, "itemID">;
+    Omit<Item, "itemID">& {
+    id?: string;
+};
 
 export type CreateDeliveryBox =
-    Omit<DeliveryBox, "deliveryBoxID">;
+    Omit<DeliveryBox, "deliveryBoxID">& {
+    id?: string;
+};
 
 // ============================================================
 // Update

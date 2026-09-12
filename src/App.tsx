@@ -24,7 +24,8 @@ import EditItemPage from "./viewmodels/EditItemPage";
 import EditSupplierPage from "./viewmodels/EditSupplierPage";
 import "./index.css";
 import MainPage from "./viewmodels/MainPage"
-
+import LogoutBar from "@/viewmodels/components/LogoutBar";
+import UserCard from "./viewmodels/components/UserCard";
 const queryClient =
     new QueryClient();
 
@@ -38,10 +39,8 @@ function App() {
 
             <BrowserRouter>
 
-                <NavigationBar
-                    accessCtrl={0}
-                />
-
+                <NavigationBar />
+                <UserCard />
                 <Routes>
 
                     <Route
@@ -81,8 +80,7 @@ function App() {
                     <Route
                         path="/managers/new"
                         element={
-                            <MainPage />
-                            //<AddManagerPage />
+                            <AddManagerPage />
                         }
                     />
 
