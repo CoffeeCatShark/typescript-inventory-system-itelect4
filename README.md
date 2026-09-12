@@ -1,24 +1,13 @@
-> useState and useEffect on App.tsx
-
-> useRef, onChangeEvent, Custom Hook on AddItems
-
-> Custom Hook only on add items due to redundant helper function (helpers.ts)
-
 ================
 
 IMPORTANT! INSTALL TO RUN: REACT ROUTER DOM
   > npm install react-router-dom
-
+  > npm install json-server@latest
+  > npm install
 ================
   > npm run dev; "o" + enter
-
+  > npm run api
 ================
-
-                       < ---WORK IN PROGRESS.--- >
-
-      Current Progress:
-      - pseudo database
-      - CRUD function commands
 ================
 - Final Functions should be:
   1. Access Control (NO PASSWORDS; TOO TIME CONSUMING TO DEVELOP) (seperate pages for suppliers and managers)
@@ -27,19 +16,7 @@ IMPORTANT! INSTALL TO RUN: REACT ROUTER DOM
   4. AI chatbot based on current inventory
     (how many are left, what should be stocked next, what supplier, etc.)(?)
 ================
-- Initial storage data is in ../data/database.ts
-  > App.tsx will read the initial data from this file and make a copy via useState
-  
-  > No actual back end, sadly
-
-  > This means that the data WILL NOT PERSIST after restarting browser.
-
-- For temporary demonstration purposes on showing suppliers,
- items, and manager list(and their requirements): 
-    go to <localhost>: / | /items | /managers | /suppliers | /items/new | /managers/new | /suppliers/new
-
-
-===============
-
-  NOTE: FILES THAT ARE NOT NEEDED: /types/index.ts
-                                      > Only used as a reference at this point.
+Notes: 
+- Everything seems to be working. Final Functions 1-3 are done. 4 is pending.
+- DeliveryBox seems to be Redundant. Will probably remove soon if there will be no requirements regarding it.
+- ManagerScreenPage and SupplierScreenPage is stalled; don't know if it will be continued since the UI is 'functional'
