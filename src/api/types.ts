@@ -6,52 +6,48 @@ import type {
 } from "../types/types";
 
 // ============================================================
-// ITEMS
+// Create
 // ============================================================
-
-export type ItemResponse =
-    Omit<Item, "itemID"> & {
-        id: number;
-    };
-
-export type CreateItem =
-    Omit<Item, "itemID">;
-
-
-// ============================================================
-// SUPPLIERS
-// ============================================================
-
-export type SupplierResponse =
-    Omit<Supplier, "supplierId"> & {
-        id: number;
-    };
-
-export type CreateSupplier =
-    Omit<Supplier, "supplierId" | "deliveryBoxID">;
-
-
-// ============================================================
-// MANAGERS
-// ============================================================
-
-export type ManagerResponse =
-    Omit<Manager, "managerID"> & {
-        id: number;
-    };
 
 export type CreateManager =
     Omit<Manager, "managerID">;
 
+export type CreateSupplier =
+    Omit<Supplier, "supplierId">;
 
-// ============================================================
-// DELIVERY BOXES
-// ============================================================
-
-export type DeliveryBoxResponse =
-    Omit<DeliveryBox, "deliveryBoxID"> & {
-        id: number;
-    };
+export type CreateItem =
+    Omit<Item, "itemID">;
 
 export type CreateDeliveryBox =
     Omit<DeliveryBox, "deliveryBoxID">;
+
+// ============================================================
+// Update
+// ============================================================
+
+export type UpdateManager =
+    Partial<Omit<Manager, "managerID">>;
+
+export type UpdateSupplier =
+    Partial<Omit<Supplier, "supplierId" | "deliveryBoxID">>;
+
+export type UpdateItem =
+    Partial<Omit<Item, "itemID">>;
+
+export type UpdateDeliveryBox = 
+    Partial<Omit<DeliveryBox, "deliveryBoxID">>
+
+
+    //**
+    // import type {
+    //CreateManager,
+    //CreateSupplier,
+    //CreateItem,
+    //CreateDeliveryBox,
+    //UpdateManager,
+    //UpdateSupplier,
+    //UpdateItem,
+    //UpdateDeliveryBox
+    //} from './types';
+    //
+    // */

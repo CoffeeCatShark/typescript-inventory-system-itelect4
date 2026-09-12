@@ -1,30 +1,5 @@
-import { Manager, Supplier, DeliveryBox, Item, Storage } from "../types/types.ts"
-import { managers, suppliers, items, deliveryBoxes} from "./database.ts"
 
-export function getSupplierById(id: number): Supplier | undefined {
-    return suppliers.find(s => s.supplierId === id);
-}
-
-export function getItemById(id: number): Item | undefined {
-    return items.find(i => i.itemID === id);
-}
-
-export function getDeliveryBoxById(id: number): DeliveryBox | undefined {
-    return deliveryBoxes.find(b => b.deliveryBoxID === id);
-}
-
-export function getManagersById(id: number): Manager | undefined {
-    return managers.find(m => m.managerID === id )
-}
-                    //REDUNDANT
-//=======================================================================================================================
-
-export function addToStorage(itemsList:Item[],storage:Storage,newItem:Item):void {
-    itemsList.push(newItem);
-    storage.itemID.push(newItem.itemID);
-}
-
-
+//will probably delete
 export function add<T>(items: T[], value:T ): void {
     items.push(value)
 }
@@ -57,12 +32,18 @@ export function update<T, K extends keyof T>(
     return true;
 }
 
-export function getById<T, K extends keyof T>(
-    array: T[],
+
+//==========================================================
+//The only Important One (Used By Cards)
+export function getById<
+    T,
+    K extends keyof T
+>(
+    list: T[],
     key: K,
-    value: T[K]
+    id: T[K]
 ): T | undefined {
-    return array.find(item => item[key] === value);
+    return list.find(item => item[key] === id);
 }
 
 //**================================================== GUIDE

@@ -5,12 +5,12 @@ import { persist } from "zustand/middleware";
 
 type CurrentUserStore = {
     isAdmin: boolean
-    userID: number | undefined
+    userID: string | undefined
     isManager?: boolean 
 
 
     setPrivileges:(isAdmin:boolean) => void
-    setUserID:(userID:number) => void
+    setUserID:(userID:string) => void
     setUserType:(isManager: boolean) => void
     
     logout: () => void;

@@ -1,69 +1,119 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { getManagers, getSuppliers } from "@/api/client";
+import { list } from "@/api/client";
 import { useCurrentUser } from "@/data/store";
 
 import { Button } from "@/components/ui/button";
+import type { Manager, Supplier } from "@/types/types";
 
 function AccountPage() {
 
     const navigate = useNavigate();
 
-    const setUserID = useCurrentUser((state) => state.setUserID);
-    const setPrivileges = useCurrentUser((state) => state.setPrivileges);
-    const setUserType = useCurrentUser((state) => state.setUserType);   
-    
-    const handleLogin = (userID:number, priveleges:boolean, userType:boolean) => {
-    setUserID(userID);
-    setPrivileges(priveleges);
-    setUserType(userType);
-    }
+    const setUserID = useCurrentUser(
+        (state) => state.setUserID
+    );
+
+    const setPrivileges = useCurrentUser(
+        (state) => state.setPrivileges
+    );
+
+    const setUserType = useCurrentUser(
+        (state) => state.setUserType
+    );
 
 
+    // ============================================================
+    // LOGIN
+    // ============================================================
 
-
-    //const setCurrentUser = useCurrentUser(
-    //    state => state.
-    //);
-
-    const { data: managers, isLoading: managersLoading } =
-        useQuery({
-            queryKey: ["managers"],
-            queryFn: getManagers
-        });
-
-    const { data: suppliers, isLoading: suppliersLoading } =
-        useQuery({
-            queryKey: ["suppliers"],
-            queryFn: getSuppliers
-        });
-
-
-    const selectManager = (
-        manager: Awaited<ReturnType<typeof getManagers>>[number]
+    const handleLogin = (
+        userID: string,
+        privileges: boolean,
+        userType: boolean
     ) => {
 
-        handleLogin(manager.managerID,true,true)
+        setUserID(userID);
+        setPrivileges(privileges);
+        setUserType(userType);
 
         navigate("/inventory");
     };
 
 
-    const selectSupplier = (
-        supplier: Awaited<ReturnType<typeof getSuppliers>>[number]
-    ) => {
+    // ============================================================
+    // MANAGERS
+    // ============================================================
 
-        handleLogin(supplier.supplierId,false,false)
+    const {
+        data: managers,
+        isLoading: managersLoading,
+        isError: managersError
+    } = useQuery({
+        queryKey: ["managers"],
+        queryFn: () => list("managers")
+    });
 
-        navigate("/inventory");
-    };
 
+    // ============================================================
+    // SUPPLIERS
+    // ============================================================
+
+    const {
+        data: suppliers,
+        isLoading: suppliersLoading,
+        isError: suppliersError
+    } = useQuery({
+        queryKey: ["suppliers"],
+        queryFn: () => list("suppliers")
+    });
+
+
+    // ============================================================
+    // LOADING
+    // ============================================================
 
     if (managersLoading || suppliersLoading) {
         return <p>Loading accounts...</p>;
     }
 
+
+    // ============================================================
+    // ERROR
+    // ============================================================
+
+    if (managersError || suppliersError) {
+        return <p>Failed to load accounts.</p>;
+    }
+
+
+    // ============================================================
+    // SELECT MANAGER
+    // ============================================================
+
+    const selectManager = (manager: Manager) => {
+
+        handleLogin(manager.managerID, true, true);
+         navigate("/inventory");
+        
+    };
+
+
+    // ============================================================
+    // SELECT SUPPLIER
+    // ============================================================
+
+    const selectSupplier = (supplier: Supplier) => {
+
+        handleLogin(supplier.supplierId, false, false);
+        navigate ("/inventory")
+    };
+
+
+    // ============================================================
+    // UI
+    // ============================================================
 
     return (
         <div className="mx-auto w-full max-w-4xl p-6">
@@ -85,28 +135,15 @@ function AccountPage() {
 
                 <div className="grid gap-4">
 
-                    {managers?.map(manager => (
-
-                        <Button
-                            key={manager.managerID}
-                            variant="outline"
-                            className="h-auto justify-between p-4"
-                            onClick={() =>
-                                selectManager(manager)
-                            }
-                        >
-
-                            <span>
-                                {manager.managerName}
-                            </span>
-
-                            <span>
-                                {manager.authLevel}
-                            </span>
-
-                        </Button>
-
-                    ))}
+                    {(managers ?? []).map((manager) => (
+                    <Button
+                        key={manager.managerID}
+                        onClick={() => selectManager(manager)}
+                    >
+                        <span>{manager.managerName}</span>
+                        <span>{manager.authLevel}</span>
+                    </Button>
+                ))}
 
                 </div>
 
@@ -125,28 +162,15 @@ function AccountPage() {
 
                 <div className="grid gap-4">
 
-                    {suppliers?.map(supplier => (
-
-                        <Button
-                            key={supplier.supplierId}
-                            variant="outline"
-                            className="h-auto justify-between p-4"
-                            onClick={() =>
-                                selectSupplier(supplier)
-                            }
-                        >
-
-                            <span>
-                                {supplier.supplier_name}
-                            </span>
-
-                            <span>
-                                Supplier
-                            </span>
-
-                        </Button>
-
-                    ))}
+                    {(suppliers ?? []).map((supplier) => (
+                    <Button
+                        key={supplier.supplierId}
+                        onClick={() => selectSupplier(supplier)}
+                    >
+                        <span>{supplier.supplier_name}</span>
+                        <span>Supplier</span>
+                    </Button>
+                ))}
 
                 </div>
 
@@ -157,3 +181,4 @@ function AccountPage() {
 }
 
 export default AccountPage;
+

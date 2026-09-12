@@ -1,91 +1,56 @@
-import { Link, useNavigate } from "react-router-dom";
-import {
-    useQuery,
-    useMutation,
-    useQueryClient
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import ItemCard from "./components/ItemCard";
+import { list } from "@/api/client";
+import ItemCard from "@/viewmodels/components/ItemCard";
 
-import type { Item } from "../types/types";
-
-import { useCurrentUser } from "@/data/store";
-
-import {
-    getItems,
-    getSuppliers,
-    deleteItem
-} from "../api/client";
-
-export default function ItemsPage() {
-const userID = useCurrentUser((state) => state.userID);
-
-
-
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
+export default function ItemPage() {
 
     const {
-        data: itemsList = [],
+        data: items,
         isLoading,
-        error
+        isError
     } = useQuery({
         queryKey: ["items"],
-        queryFn: getItems
+        queryFn: () => list("items")
     });
 
-    const { data: supplierList = [] } = useQuery({
+    const {
+        data: suppliers,
+        isLoading: suppliersLoading
+    } = useQuery({
         queryKey: ["suppliers"],
-        queryFn: getSuppliers
+        queryFn: () => list("suppliers")
     });
 
-    const removeItem = useMutation({
-        mutationFn: deleteItem,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["items"]
-            });
-        }
-    });
-
-    function handleEdit(item: Item) {
-        navigate(`/items/edit/${item.itemID}`);
-    }
-
-    function handleDelete(item: Item) {
-        removeItem.mutate(item.itemID);
-    }
-
-    if (isLoading) {
+    if (isLoading || suppliersLoading) {
         return <p>Loading items...</p>;
     }
 
-    if (error) {
-        return (
-            <p>
-                Could not reach the API. Make sure
-                `npm run api` is running on port 3001.
-            </p>
-        );
+    if (isError) {
+        return <p>Failed to load items.</p>;
     }
 
     return (
-        <div className="mx-auto w-full max-w-4xl p-6">
-            <h2>Items</h2>
+        <div className="mx-auto w-full max-w-5xl p-6">
 
-            {itemsList.map(item => (
-                <ItemCard
-                    key={item.itemID}
-                    item={item}
-                    supplierList={supplierList}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                />
-            ))}
+            <h1 className="mb-6 text-3xl font-bold">
+                Items
+            </h1>
 
-            <Link to="/items/new">
-                Add New Item
-            </Link>
+            <div className="grid gap-4">
+
+                {(items ?? []).map((item) => (
+                    <ItemCard
+                        key={item.itemID}
+                        item={item}
+                        supplierList={suppliers ?? []}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                    />
+                ))}
+
+            </div>
+
         </div>
     );
 }

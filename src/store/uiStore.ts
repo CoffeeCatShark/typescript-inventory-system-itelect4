@@ -12,7 +12,7 @@ interface UIStore {
 
     closeSidebar: () => void;
 
-    selectItem: (itemID: number) => void;
+    selectItem: (itemID: string) => void;
 
     clearSelectedItem: () => void;
 }

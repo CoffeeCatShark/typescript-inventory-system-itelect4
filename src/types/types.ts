@@ -18,13 +18,13 @@ export enum SupplierType {
  *--------------------------------------------------------------INTERFACES------------------------------------------------------------*
  */
 export interface Manager{
-    managerID: number,
+    managerID: string,
     managerName: string,
     authLevel: AuthorizationLvl
 }
 
 export interface Supplier{
-    supplierId: number,
+    supplierId: string, 
     supplier_name: string,
     type: SupplierType,
     deliveryBoxID: number
@@ -35,26 +35,38 @@ export interface Supplier{
  */
 
 export type DeliveryBox = {
-    deliveryBoxID: number,
-    ownerID: number
-    itemsID: number[]
+    deliveryBoxID: string,
+    ownerID: string
+    itemsID: string[]
 }
 
 
 export type Storage = {
-    itemID: number[]
+    itemID: string[]
 }
 
 
 export type Item = 
 {
-    itemID: number,
+    itemID: string,
     itemName: string,
-    supplierID: number
+    supplierID: string
     supplierPrice: number,
     itemType: SupplierType,
     deliveredQuantity: number
 }
 
 
+export type CurrentUser =
+    | {
+        id: string;
+        name: string;
+        role: "Supplier";
+      }
+    | {
+        id: string;
+        name: string;
+        role: "Manager";
+        authLevel: AuthorizationLvl;
+      };
 //----------------------------------------------------------------------------------------------------------------------------------------

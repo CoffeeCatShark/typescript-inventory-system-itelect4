@@ -1,80 +1,47 @@
-import { useCurrentUser } from "@/data/store";
-import { Link, useNavigate } from "react-router-dom";
-import {
-    useQuery,
-    useMutation,
-    useQueryClient
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import SupplierCard from "./components/SupplierCard";
-
-import type { Supplier } from "../types/types";
-
-import {
-    getSuppliers,
-    deleteSupplier
-} from "../api/client";
+import { list } from "@/api/client";
+import SupplierCard from "@/viewmodels/components/SupplierCard";
 
 export default function SuppliersPage() {
 
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
-
     const {
-        data: supplierList = [],
+        data: suppliers,
         isLoading,
-        error
+        isError
     } = useQuery({
         queryKey: ["suppliers"],
-        queryFn: getSuppliers
+        queryFn: () => list("suppliers")
     });
-
-    const removeSupplier = useMutation({
-        mutationFn: deleteSupplier,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["suppliers"]
-            });
-        }
-    });
-
-    function handleEdit(supplier: Supplier) {
-        navigate(`/suppliers/edit/${supplier.supplierId}`);
-    }
-
-    function handleDelete(supplier: Supplier) {
-        removeSupplier.mutate(supplier.supplierId);
-    }
 
     if (isLoading) {
         return <p>Loading suppliers...</p>;
     }
 
-    if (error) {
-        return (
-            <p>
-                Could not reach the API. Make sure
-                `npm run api` is running on port 3001.
-            </p>
-        );
+    if (isError) {
+        return <p>Failed to load suppliers.</p>;
     }
 
     return (
-        <div className="mx-auto w-full max-w-4xl p-6">
-            <h2>Suppliers</h2>
+        <div className="mx-auto w-full max-w-5xl p-6">
 
-            {supplierList.map(supplier => (
-                <SupplierCard
-                    key={supplier.supplierId}
-                    supplier={supplier}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                />
-            ))}
+            <h1 className="mb-6 text-3xl font-bold">
+                Suppliers
+            </h1>
 
-            <Link to="/suppliers/new">
-                Add New Supplier
-            </Link>
+            <div className="grid gap-4">
+
+                {(suppliers ?? []).map((supplier) => (
+                    <SupplierCard
+                        key={supplier.supplierId}
+                        supplier={supplier}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                    />
+                ))}
+
+            </div>
+
         </div>
     );
 }

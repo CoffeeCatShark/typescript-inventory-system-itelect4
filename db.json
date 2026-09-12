@@ -1,22 +1,39 @@
 {
   "items": [],
   "suppliers": [
-
+    {
+      "id": "2",
+      "supplier_name": "Blackberry",
+      "type": "Appliances",
+      "deliveryBoxID": 2
+    },
+    {
+      "id": "2",
+      "supplier_name": "Blackberry",
+      "type": "Appliances",
+      "deliveryBoxID": 3
+    },
+    {
+      "id": "3",
+      "supplier_name": "Blackberry",
+      "type": "Appliances",
+      "deliveryBoxID": 3
+    }
   ],
   "managers": [
     {
-      "id": 3,
+      "id": "3",
       "managerName": "sadasdsadsad",
       "authLevel": "Pending"
     },
     {
-      "id": 4,
+      "id": "4",
       "managerName": "Christian Custodio",
       "authLevel": "High"
     }
   ],
   "deliveryBoxes": [
- 
+
   ],
   "$schema": "./node_modules/json-server/schema.json"
 }

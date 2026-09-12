@@ -1,73 +1,46 @@
-import { Link } from "react-router-dom";
-import {
-    useQuery,
-    useMutation,
-    useQueryClient
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import ManagerCard from "./components/ManagerCard";
-
-import type { Manager } from "../types/types";
-
-import {
-    getManagers,
-    deleteManager
-} from "../api/client";
+import { list } from "@/api/client";
+import ManagerCard from "@/viewmodels/components/ManagerCard";
 
 export default function ManagersPage() {
 
-    const queryClient = useQueryClient();
-
     const {
-        data: managersList = [],
+        data: managers,
         isLoading,
-        error
+        isError
     } = useQuery({
         queryKey: ["managers"],
-        queryFn: getManagers
+        queryFn: () => list("managers")
     });
-
-    const removeManager = useMutation({
-        mutationFn: deleteManager,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["managers"]
-            });
-        }
-    });
-
-    function handleDelete(manager: Manager) {
-        removeManager.mutate(manager.managerID);
-    }
 
     if (isLoading) {
         return <p>Loading managers...</p>;
     }
 
-    if (error) {
-        return (
-            <p>
-                Could not reach the API. Make sure
-                `npm run api` is running on port 3001.
-            </p>
-        );
+    if (isError) {
+        return <p>Failed to load managers.</p>;
     }
 
     return (
-        <div className="mx-auto w-full max-w-4xl p-6">
-            <h2>Managers</h2>
+        <div className="mx-auto w-full max-w-5xl p-6">
 
-            {managersList.map(manager => (
-                <ManagerCard
-                    key={manager.managerID}
-                    manager={manager}
-                    onDelete={handleDelete}
-                />
-            ))}
+            <h1 className="mb-6 text-3xl font-bold">
+                Managers
+            </h1>
 
-            <Link to="/managers/new">
-                Add New Manager
-            </Link>
+            <div className="grid gap-4">
+
+                {(managers ?? []).map((manager) => (
+                    <ManagerCard
+                        key={manager.managerID}
+                        manager={manager}
+                        onDelete={() => {}}
+                    />
+                ))}
+
+            </div>
+
         </div>
     );
 }
