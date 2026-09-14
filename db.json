@@ -23,6 +23,14 @@
       "deliveredQuantity": 100,
       "itemType": "Furnitures",
       "id": "hWGU4-E5sRI"
+    },
+    {
+      "itemName": "testing",
+      "supplierID": "qGoeBnRqCU0",
+      "supplierPrice": 2,
+      "deliveredQuantity": 2,
+      "itemType": "Appliances",
+      "id": "z1hfLGT"
     }
   ],
   "suppliers": [
