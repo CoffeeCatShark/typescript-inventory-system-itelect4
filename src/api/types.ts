@@ -6,56 +6,25 @@ import type {
 } from "../types/types";
 
 // ============================================================
-// Create
+// CREATE
 // ============================================================
 
-export type CreateManager =
-    Omit<Manager, "managerID">& {
-    id?: string;
-};
+export type CreateManager = Omit<Manager, "id">;
 
-export type CreateSupplier =
-    Omit<Supplier, "supplierId">& {
-    id?: string;
-};
+export type CreateSupplier = Omit<Supplier, "id">;
 
-export type CreateItem =
-    Omit<Item, "itemID">& {
-    id?: string;
-};
+export type CreateItem = Omit<Item, "id">;
 
-export type CreateDeliveryBox =
-    Omit<DeliveryBox, "deliveryBoxID">& {
-    id?: string;
-};
+export type CreateDeliveryBox = Omit<DeliveryBox, "id">;
 
 // ============================================================
-// Update
+// UPDATE
 // ============================================================
 
-export type UpdateManager =
-    Partial<Omit<Manager, "managerID">>;
+export type UpdateManager = Partial<Omit<Manager, "id">>;
 
-export type UpdateSupplier =
-    Partial<Omit<Supplier, "supplierId" | "deliveryBoxID">>;
+export type UpdateSupplier = Partial<Omit<Supplier, "id">>;
 
-export type UpdateItem =
-    Partial<Omit<Item, "itemID">>;
+export type UpdateItem = Partial<Omit<Item, "id">>;
 
-export type UpdateDeliveryBox = 
-    Partial<Omit<DeliveryBox, "deliveryBoxID">>
-
-
-    //**
-    // import type {
-    //CreateManager,
-    //CreateSupplier,
-    //CreateItem,
-    //CreateDeliveryBox,
-    //UpdateManager,
-    //UpdateSupplier,
-    //UpdateItem,
-    //UpdateDeliveryBox
-    //} from './types';
-    //
-    // */
+export type UpdateDeliveryBox = Partial<Omit<DeliveryBox, "id">>;

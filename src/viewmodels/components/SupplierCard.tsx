@@ -34,11 +34,6 @@ export default function SupplierCard({
                 {supplier.type}
             </p>
 
-            <p>
-                Delivery Box:
-                {" "}
-                {supplier.deliveryBoxID}
-            </p>
 
             <button
                 className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"

@@ -1,28 +1,44 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+
 import { list, remove } from "@/api/client";
 import ItemCard from "@/viewmodels/components/ItemCard";
 import { useCurrentUser } from "@/data/store";
-import { Item } from "@/types/types";
+import type { Item } from "@/types/types";
 
 export default function ItemPage() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
     const userID = useCurrentUser((state) => state.userID);
     const isManager = useCurrentUser((state) => state.isManager);
 
-    async function handleDelete(item: Item) {
-    await remove(`items/${item.id}`);
-}
-
+    // ============================================================
+    // GET ITEMS
+    // ============================================================
 
     const {
         data: items,
         isLoading,
         isError
     } = useQuery({
-        queryKey: ["items"],
-        queryFn: () => list("items")
+        queryKey: ["items", isManager ? "manager" : userID],
+        queryFn: () => {
+            if (isManager) {
+                return list("items");
+            }
+
+            if (!userID) {
+                return Promise.resolve([]);
+            }
+
+            return list("items", userID);
+        }
     });
+
+    // ============================================================
+    // GET SUPPLIERS
+    // ============================================================
 
     const {
         data: suppliers,
@@ -32,6 +48,28 @@ export default function ItemPage() {
         queryFn: () => list("suppliers")
     });
 
+    // ============================================================
+    // DELETE ITEM
+    // ============================================================
+
+    const deleteItemMutation = useMutation({
+        mutationFn: (itemID: string) => remove(`items/${itemID}`),
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["items"]
+            });
+        }
+    });
+
+    function handleDelete(item: Item) {
+        deleteItemMutation.mutate(item.id);
+    }
+
+    // ============================================================
+    // LOADING / ERROR
+    // ============================================================
+
     if (isLoading || suppliersLoading) {
         return <p>Loading items...</p>;
     }
@@ -40,14 +78,9 @@ export default function ItemPage() {
         return <p>Failed to load items.</p>;
     }
 
-    const visibleItems = (items ?? []).filter((item) => {
-    if (isManager) {
-        return true;
-    }
-
-    return item.supplierID === userID;
-    });
-
+    // ============================================================
+    // UI
+    // ============================================================
 
     return (
         <div className="mx-auto w-full max-w-5xl p-6">
@@ -58,18 +91,17 @@ export default function ItemPage() {
                 </h1>
 
                 {!isManager && (
-                <button
-                    onClick={() => navigate("/items/new")}
-                    className="rounded-md px-4 py-2 font-medium shadow-sm"
-                >
-                    ADD ITEM
-                </button>
-            )}
+                    <button
+                        onClick={() => navigate("/items/new")}
+                        className="rounded-md px-4 py-2 font-medium shadow-sm"
+                    >
+                        ADD ITEM
+                    </button>
+                )}
             </div>
 
             <div className="grid gap-4">
-
-                {(visibleItems ?? []).map((item) => (
+                {(items ?? []).map((item) => (
                     <ItemCard
                         key={item.id}
                         item={item}
@@ -77,10 +109,9 @@ export default function ItemPage() {
                         onEdit={(item) => {
                             navigate(`/items/edit/${item.id}`);
                         }}
-                        onDelete={(item) => {handleDelete(item)}}
+                        onDelete={handleDelete}
                     />
                 ))}
-
             </div>
 
         </div>

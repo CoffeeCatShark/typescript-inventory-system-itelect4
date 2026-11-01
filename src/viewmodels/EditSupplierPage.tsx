@@ -11,7 +11,6 @@ export default function EditSupplierPage() {
 
     const [supplierName, setSupplierName] = useState("");
     const [type, setType] = useState<Supplier["type"]>(SupplierType.Appliances);
-    const [deliveryBoxID, setDeliveryBoxID] = useState("");
 
     const {
         data: supplier,
@@ -27,7 +26,6 @@ export default function EditSupplierPage() {
         if (supplier) {
             setSupplierName(supplier.supplier_name);
             setType(supplier.type);
-            setDeliveryBoxID(String(supplier.deliveryBoxID));
         }
     }, [supplier]);
 
@@ -45,7 +43,6 @@ export default function EditSupplierPage() {
             {
                 supplier_name: supplierName,
                 type: type,
-                deliveryBoxID: deliveryBoxID
             }
         );
 
@@ -114,20 +111,6 @@ export default function EditSupplierPage() {
                             Furnitures
                         </option>
                     </select>
-                </div>
-
-
-                <div>
-                    <label className="block font-medium">
-                        Delivery Box ID
-                    </label>
-
-                    <input
-                        type="text"
-                        readOnly
-                        value={deliveryBoxID}
-                        className="w-full rounded-md border px-3 py-2"
-                    />
                 </div>
 
 

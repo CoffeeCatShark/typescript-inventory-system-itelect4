@@ -24,7 +24,6 @@ import EditItemPage from "./viewmodels/EditItemPage";
 import EditSupplierPage from "./viewmodels/EditSupplierPage";
 import "./index.css";
 import MainPage from "./viewmodels/MainPage"
-import LogoutBar from "@/viewmodels/components/LogoutBar";
 import UserCard from "./viewmodels/components/UserCard";
 const queryClient =
     new QueryClient();

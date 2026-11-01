@@ -25,7 +25,6 @@ export default function AddSupplierPage() {
             {
                 supplier_name: supplierName,
                 type: type,
-                deliveryBoxID: "0"
             }
         );
 
@@ -114,6 +113,7 @@ export default function AddSupplierPage() {
                     <button
                         type="submit"
                         className="rounded-md px-4 py-2 font-medium shadow-sm transition hover:opacity-90"
+                        onClick={() => navigate("/suppliers")}
                     >
                         ADD SUPPLIER
                     </button>

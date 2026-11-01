@@ -6,6 +6,7 @@ import { useCurrentUser } from "@/data/store";
 
 import { Button } from "@/components/ui/button";
 import type { Manager, Supplier } from "@/types/types";
+import { demoManagers } from "@/data/demoManagers";
 
 function AccountPage() {
 
@@ -50,14 +51,7 @@ function AccountPage() {
     // MANAGERS
     // ============================================================
 
-    const {
-        data: managers,
-        isLoading: managersLoading,
-        isError: managersError
-    } = useQuery({
-        queryKey: ["managers"],
-        queryFn: () => list("managers")
-    });
+    const managers = demoManagers;
 
 
     // ============================================================
@@ -78,7 +72,7 @@ function AccountPage() {
     // LOADING
     // ============================================================
 
-    if (managersLoading || suppliersLoading) {
+    if (suppliersLoading) {
         return <p>Loading accounts...</p>;
     }
 
@@ -87,7 +81,7 @@ function AccountPage() {
     // ERROR
     // ============================================================
 
-    if (managersError || suppliersError) {
+    if (suppliersError) {
         return <p>Failed to load accounts.</p>;
     }
 

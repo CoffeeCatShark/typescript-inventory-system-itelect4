@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+
 import { useNavigate } from "react-router-dom";
-import { list, remove } from "@/api/client";
+import { remove } from "@/api/client";
 import ManagerCard from "@/viewmodels/components/ManagerCard";
 import { Manager } from "@/types/types";
+import { demoManagers } from "@/data/demoManagers";
 
 export default function ManagersPage() {
 
@@ -10,22 +11,8 @@ export default function ManagersPage() {
         await remove(`managers/${manager.id}`);
     }
 const navigate = useNavigate();
-    const {
-        data: managers,
-        isLoading,
-        isError
-    } = useQuery({
-        queryKey: ["managers"],
-        queryFn: () => list("managers")
-    });
 
-    if (isLoading) {
-        return <p>Loading managers...</p>;
-    }
-
-    if (isError) {
-        return <p>Failed to load managers.</p>;
-    }
+const managers = demoManagers;
 
     return (
         <div className="mx-auto w-full max-w-5xl p-6">

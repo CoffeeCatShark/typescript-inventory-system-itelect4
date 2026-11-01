@@ -1,6 +1,5 @@
-import { set } from "react-hook-form";
+
 import { create } from "zustand";
-import { Supplier, Manager } from "@/types/types";
 import { persist } from "zustand/middleware";
 
 type CurrentUserStore = {

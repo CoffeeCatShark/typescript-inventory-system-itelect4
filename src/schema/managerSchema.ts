@@ -11,7 +11,7 @@ export const managerSchema = z.object({
         ),
 
     authLevel:
-        z.nativeEnum(AuthorizationLvl)
+        z.enum(AuthorizationLvl)
 });
 
 export type ManagerFormData =

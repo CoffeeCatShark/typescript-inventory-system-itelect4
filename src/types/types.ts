@@ -1,7 +1,3 @@
-
-
-//*--------------------------------------------------------------ENUMS------------------------------------------------------------*
-// */
 export enum AuthorizationLvl {
     High = "High",
     Low = "Low",
@@ -14,59 +10,54 @@ export enum SupplierType {
     Tools = "Tools"
 }
 
-/**
- *--------------------------------------------------------------INTERFACES------------------------------------------------------------*
- */
-export interface Manager{
-    id: string,
-    managerName: string,
-    authLevel: AuthorizationLvl
+// ============================================================
+// INTERFACES
+// ============================================================
+
+export interface Manager {
+    id: string;
+    managerName: string;
+    authLevel: AuthorizationLvl;
 }
 
-export interface Supplier{
-    id: string, 
-    supplier_name: string,
-    type: SupplierType,
-    deliveryBoxID: string
+export interface Supplier {
+    id: string;
+    supplier_name: string;
+    type: SupplierType;
 }
 
-/**
- *--------------------------------------------------------------TYPES------------------------------------------------------------*
- */
+export type Item = {
+    id: string;
+    itemName: string;
+    supplierID: string;
+    supplierPrice: number;
+    itemType: SupplierType;
+    deliveredQuantity: number;
+};
+
+// ============================================================
+// OTHER TYPES
+// ============================================================
 
 export type DeliveryBox = {
-    id: string,
-    ownerID: string
-    itemsID: string[]
-}
-
+    id: string;
+    ownerID: string;
+    itemsID: string[];
+};
 
 export type Storage = {
-    itemID: string[]
-}
-
-
-export type Item = 
-{
-    id: string,
-    itemName: string,
-    supplierID: string
-    supplierPrice: number,
-    itemType: SupplierType,
-    deliveredQuantity: number
-}
-
+    itemID: string[];
+};
 
 export type CurrentUser =
     | {
         id: string;
         name: string;
         role: "Supplier";
-      }
+    }
     | {
         id: string;
         name: string;
         role: "Manager";
         authLevel: AuthorizationLvl;
-      };
-//----------------------------------------------------------------------------------------------------------------------------------------
+    };

@@ -1,16 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "@tanstack/react-query";
+
 import { list, remove } from "@/api/client";
 import SupplierCard from "@/viewmodels/components/SupplierCard";
 import { useNavigate } from "react-router-dom";
-import { Supplier } from "@/types/types";
+import type { Supplier } from "@/types/types";
+
 export default function SuppliersPage() {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    async function handleDelete(supplier: Supplier) {
-    await remove(`deliveryBoxes/${supplier.deliveryBoxID}`);
-    await remove(`suppliers/${supplier.id}`)
-}
+    // ============================================================
+    // GET SUPPLIERS
+    // ============================================================
 
-const navigate = useNavigate()
     const {
         data: suppliers,
         isLoading,
@@ -20,6 +26,33 @@ const navigate = useNavigate()
         queryFn: () => list("suppliers")
     });
 
+    // ============================================================
+    // DELETE SUPPLIER
+    // ============================================================
+
+    const deleteSupplierMutation = useMutation({
+        mutationFn: (supplierID: string) =>
+            remove(`suppliers/${supplierID}`),
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["suppliers"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["items"]
+            });
+        }
+    });
+
+    function handleDelete(supplier: Supplier) {
+        deleteSupplierMutation.mutate(supplier.id);
+    }
+
+    // ============================================================
+    // LOADING / ERROR
+    // ============================================================
+
     if (isLoading) {
         return <p>Loading suppliers...</p>;
     }
@@ -27,6 +60,10 @@ const navigate = useNavigate()
     if (isError) {
         return <p>Failed to load suppliers.</p>;
     }
+
+    // ============================================================
+    // UI
+    // ============================================================
 
     return (
         <div className="mx-auto w-full max-w-5xl p-6">
@@ -45,7 +82,6 @@ const navigate = useNavigate()
             </div>
 
             <div className="grid gap-4">
-
                 {(suppliers ?? []).map((supplier) => (
                     <SupplierCard
                         key={supplier.id}
@@ -53,10 +89,9 @@ const navigate = useNavigate()
                         onEdit={() => {
                             navigate(`/suppliers/edit/${supplier.id}`);
                         }}
-                        onDelete={(supplier) => {handleDelete(supplier)}}
+                        onDelete={handleDelete}
                     />
                 ))}
-
             </div>
 
         </div>
