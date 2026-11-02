@@ -148,3 +148,41 @@ export async function remove(key: string): Promise<void> {
         })
     );
 }
+// ============================================================
+// AI
+// ============================================================
+
+export interface ChatMessage {
+    role: "user" | "model";
+    content: string;
+}
+
+export interface ChatResponse {
+    success: boolean;
+    response: string;
+}
+
+export async function sendChatMessage(
+    message: string,
+    history: ChatMessage[]
+): Promise<ChatResponse> {
+    const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/ai/chat`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message,
+                history
+            })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to communicate with AI assistant.");
+    }
+
+    return response.json();
+}

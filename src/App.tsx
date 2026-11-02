@@ -25,6 +25,8 @@ import EditSupplierPage from "./viewmodels/EditSupplierPage";
 import "./index.css";
 import MainPage from "./viewmodels/MainPage"
 import UserCard from "./viewmodels/components/UserCard";
+import AIChatbot from "./viewmodels/components/AIChatBot";
+
 const queryClient =
     new QueryClient();
 
@@ -40,6 +42,7 @@ function App() {
 
                 <NavigationBar />
                 <UserCard />
+                <AIChatbot />
                 <Routes>
 
                     <Route
